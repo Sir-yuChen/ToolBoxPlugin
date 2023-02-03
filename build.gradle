@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '1.12.0' //引入intellij的gradle插件
+}
+
+group 'com.github.toolBoxPlugin'
+//version '1.0' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
+
+//指定编码环境
+sourceCompatibility=1.8
+//指定编译环境
+targetCompatibility =1.8
+//设置编码
+tasks.withType(JavaCompile) {
+    options.encoding ="UTF-8"
+}
+//添加java文档
+task createJavadoc(type: Javadoc)  {
+    source = sourceSets.main.allJava
+}
+
+repositories {
+    mavenLocal()//添加Maven本地资源库
+    mavenCentral()//远程仓库
+}
+
+dependencies {
+    //这里引别的依赖包
+    //①.依赖当前项目下的某个模块[子工程] 直接依赖本工程中的 libary module 直接依赖本工程中的 libary module
+//    implementation project(':subject01')
+    //②.直接依赖本地的某个jar文件
+//    implementation files('libs/foo.jar', 'libs/bar.jar')
+    //②.配置某文件夹作为依赖项
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //③.直接依赖
+//    implementation 'org.apache.logging.log4j:log4j:2.17.2' //简写
+    implementation group: 'org.apache.logging.log4j', name: 'log4j', version: '2.17.2' //完整写法
+
+    /*
+     依赖的类型：
+        compileOnly	：由java插件提供,曾短暂的叫provided,后续版本已经改成了compileOnly,适用于编译期需要而不需要打包的情 况
+        runtimeOnly	：由 java 插件提供,只在运行期有效,编译时不需要,比如 mysql 驱动包。,取代老版本中被移除的 runtime
+        implementation ：由 java 插件提供, 针对源码[src/main 目录] ,在编译、运行时都有效,取代老版本中被移除的 compile
+        testCompileOnly	：由 java 插件提供,用于编译测试的依赖项，运行时不需要
+        testRuntimeOnly	：由 java 插件提供,只在测试运行时需要，而不是在测试编译时需要,取代老版本中被移除的 testRuntime
+        testImplementation	：由 java 插件提供,针对测试代码[src/test 目录] 取代老版本中被移除的 testCompile
+        providedCompile	war ：插件提供支持，编译、测试阶段代码需要依赖此类 jar 包，而运行阶段容器已经提供了相应的支持，所 以无需将这些文件打入到 war 包中了;例如 servlet-api.jar、jsp-api.jar
+        compile	：编译范围依赖在所有的 classpath 中可用，同时它们也会被打包。在 gradle 7.0 已经移除
+        runtime	：runtime 依赖在运行和测试系统的时候需要,在编译的时候不需要,比如 mysql 驱动包。在 gradle 7.0 已经移除
+        api	java-library ：插件 提供支持,这些依赖项可以传递性地导出给使用者，用于编译时和运行时。取代老版本中被 移除的 compile
+        compileOnlyApi：	java-library 插件 提供支持,在声明模块和使用者在编译时需要的依赖项，但在运行时不需要。
+    */
+
+}
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    // 这里是指打插件包的时候用idea什么版本的依赖包打
+    // 比如这里用2019.3打包，如果你的插件实现源码里用了2019.3不存在的依赖包或类，就会报错
+    // 一般就填当前IDEA的版本号即可
+//    plugins = ['com.intellij.java']
+    version = '2020.1.2'
+//    sandboxDirectory = "$project.buildDir/myCustom-sandbox"
+}
+
+patchPluginXml {
+    changeNotes ="""
+      1.0版本.
+      第1.0版本：初始化这个工具箱插件项目.<br>
+      """
+
+    // 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA
+    // 这里配置sinceBuild=191，表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
+//    sinceBuild ="201"
+}

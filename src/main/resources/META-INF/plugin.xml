@@ -1,0 +1,47 @@
+<idea-plugin>
+    <!-- 插件唯一id，不能和其他插件项目重复，所以推荐使用com.xxx.xxx的格式
+            插件不同版本之间不能更改，若没有指定，则与插件名称相同 -->
+    <id>com.github.toolboxplugin</id>
+    <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
+    <name>ToolBoxPlugin</name>
+    <!-- 插件版本号  plugin.xml和build.gradle 二选一-->
+    <version>1.0</version>
+
+    <!-- 供应商主页和email（不能使用默认值，必须修改成自己的）-->
+    <vendor email="2470838639@qq.com" url="https://github.com/Sir-yuChen">Sir-yuChen</vendor>
+
+    <!-- 插件的描述 （不能使用默认值，必须修改成自己的。并且需要大于40个字符）-->
+    <description><![CDATA[
+           Toolbox这是一款工具箱插件,里面包含各种开发工具,全部有java语言编写,包括搜索、展示、阅读等功能. <br>
+      <em> Toolbox 工具箱 </em>
+    ]]></description>
+    <!-- 插件版本变更信息，支持HTML标签；
+         将展示在 settings | Plugins 对话框和插件仓库的Web页面 -->
+    <change-notes><![CDATA[
+      1. 搜索展示<br>
+      2. 阅读、预览<br>
+      <p>Toolbox 工具箱功能迭代中...</p>
+    ]]>
+    </change-notes>
+    <!-- 插件所依赖的其他插件的id -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 声明该插件对IDEA core或其他插件的扩展 -->
+        <!-- secondary:true表示设置在tool window bar最下方 参考：https://www.jianshu.com/p/676201ef113c -->
+        <toolWindow id="toolBoxPlugin.search.factory" anchor="right" factoryClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory" secondary="true"/>
+    </extensions>
+    <!-- 编写插件动作 -->
+    <actions>
+        <!--
+            group-id -> 要绑定的菜单组ID
+            anchor -> 顺序位置 枚举值有:first last before after
+            relative-to-action -> 当anchor的值在before after其中一个时,需要此字段指定相对的一个菜单操作
+        -->
+        <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="test.toolboxplugin" class="com.github.toolboxplugin.action.test" text="testTool"/>
+<!--            <action id="toolBoxPlugin.search.button" class="com.github.toolboxplugin.toolWindowFactory.searchFactory" text="搜索"/>-->
+        </group>
+    </actions>
+</idea-plugin>
