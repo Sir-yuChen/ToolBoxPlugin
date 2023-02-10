@@ -1,4 +1,7 @@
-<idea-plugin>
+<!--[可选项]可指定插件主页，用于在商店插件页展示
+https://juejin.cn/post/7132360828409348104
+-->
+<idea-plugin url="https://example.com/my-plugin-site">
     <!-- 插件唯一id，不能和其他插件项目重复，所以推荐使用com.xxx.xxx的格式
             插件不同版本之间不能更改，若没有指定，则与插件名称相同 -->
     <id>com.github.toolboxplugin</id>
@@ -29,7 +32,13 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- 声明该插件对IDEA core或其他插件的扩展 -->
         <!-- secondary:true表示设置在tool window bar最下方 参考：https://www.jianshu.com/p/676201ef113c -->
-        <toolWindow id="toolBoxPlugin.search.factory" anchor="right" factoryClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory" secondary="true"/>
+        <toolWindow id="ToolBoxPlugin"
+                    anchor="right"
+                    factoryClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory"
+                    secondary="true"/>
+<!--                    conditionClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory"-->
+
+        <executor implementation="com.github.toolboxplugin.executor.CustomRunExecutor" id="CustomRunExecutor"/>
     </extensions>
     <!-- 编写插件动作 -->
     <actions>
@@ -41,7 +50,9 @@
         <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="test.toolboxplugin" class="com.github.toolboxplugin.action.test" text="testTool"/>
-<!--            <action id="toolBoxPlugin.search.button" class="com.github.toolboxplugin.toolWindowFactory.searchFactory" text="搜索"/>-->
+            <!--            <action id="toolBoxPlugin.search.button" class="com.github.toolboxplugin.toolWindowFactory.searchFactory" text="搜索"/>-->
+            <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.SearchAction"
+                    text="Search for you" description="搜索功能"/>
         </group>
     </actions>
 </idea-plugin>
