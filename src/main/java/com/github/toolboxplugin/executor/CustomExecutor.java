@@ -1,6 +1,5 @@
 package com.github.toolboxplugin.executor;
 
-import com.github.toolboxplugin.swing.SearchBar;
 import com.github.toolboxplugin.utils.StringConst;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionManager;
@@ -71,7 +70,8 @@ public class CustomExecutor implements Disposable {
         Disposer.dispose(this);
     }
 
-    public void run() {
+    public void run(JComponent jComponent) {
+        //传递一个对象
         if (project.isDisposed()) {
             return;
         }
@@ -84,18 +84,20 @@ public class CustomExecutor implements Disposable {
         final RunnerLayoutUi.Factory factory = RunnerLayoutUi.Factory.getInstance(project);
         RunnerLayoutUi layoutUi = factory.create("runnerId", "runnerTitle", "sessionName", project);
         final JPanel consolePanel = createConsolePanel(consoleView);
-        SearchBar searchBar = new SearchBar();
+
         RunContentDescriptor descriptor = new RunContentDescriptor(new RunProfile() {
             @Nullable
             @Override
-            public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment)  {
+            public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
                 return null;
             }
+
             @NotNull
             @Override
             public String getName() {
-                return searchBar.getComponent().getName();
+                return jComponent.getName();
             }
+
             @Nullable
             @Override
             public Icon getIcon() {
@@ -103,7 +105,7 @@ public class CustomExecutor implements Disposable {
             }
         }, new DefaultExecutionResult(), layoutUi);
         descriptor.setExecutionId(System.nanoTime());
-        final Content content = layoutUi.createContent(StringConst.SEO_CONTENT_ID, searchBar.getComponent(),searchBar.getComponent().getName(), AllIcons.Debugger.Console, consolePanel);
+        final Content content = layoutUi.createContent(StringConst.SEO_CONTENT_ID, jComponent, jComponent.getName(), AllIcons.Debugger.Console, consolePanel);
         content.setCloseable(true);
         layoutUi.getOptions().setLeftToolbar(createActionToolbar(consolePanel, consoleView, layoutUi, descriptor, executor), "RunnerToolbar");
 

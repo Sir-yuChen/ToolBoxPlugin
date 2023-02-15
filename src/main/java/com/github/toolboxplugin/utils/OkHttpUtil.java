@@ -2,6 +2,8 @@ package com.github.toolboxplugin.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -17,11 +19,14 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtil {
+    private static Logger logger = LogManager.getLogger(OkHttpUtil.class);
+
     private static volatile OkHttpClient okHttpClient = null;
     private static volatile Semaphore semaphore = null;
     private Map<String, String> headerMap;
     private Map<String, String> paramMap;
     private String url;
+    private String transmit;
     private Request.Builder request;
 
     /**
@@ -97,6 +102,16 @@ public class OkHttpUtil {
     }
 
     /**
+     * get 带参方式 =  / 两种方式
+     */
+    public OkHttpUtil addParameter(String key) {
+        if (key != null) {
+            transmit = key;
+        }
+        return this;
+    }
+
+    /**
      * 添加请求头
      *
      * @param key   参数名
@@ -120,14 +135,29 @@ public class OkHttpUtil {
         request = new Request.Builder().get();
         StringBuilder urlBuilder = new StringBuilder(url);
         if (paramMap != null) {
-            urlBuilder.append("?");
             try {
-                for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-                    urlBuilder.append(URLEncoder.encode(entry.getKey(), "utf-8")).
-                            append("=").
-                            append(URLEncoder.encode(entry.getValue(), "utf-8")).
-                            append("&");
+
+                switch (transmit) {
+                    case "/":
+                        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+                            urlBuilder.append(URLEncoder.encode(entry.getValue(), "utf-8")).
+                                    append("/");
+                        }
+                        break;
+                    case "=":
+                        urlBuilder.append("?");
+                        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+                            urlBuilder.append(URLEncoder.encode(entry.getKey(), "utf-8")).
+                                    append("=").
+                                    append(URLEncoder.encode(entry.getValue(), "utf-8")).
+                                    append("&");
+                        }
+                        break;
+                    default:
+                        logger.error("未知符合");
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -227,6 +257,7 @@ public class OkHttpUtil {
             }
         });
     }
+
     public void sync(ICallBack callBack) {
         setHeader(request);
         okHttpClient.newCall(request.build()).enqueue(new Callback() {

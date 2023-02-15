@@ -1,6 +1,6 @@
 package com.github.toolboxplugin.toolWindowFactory;
 
-import com.github.toolboxplugin.swing.SearchBar;
+import com.github.toolboxplugin.swing.TestIdeaPlugin;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Condition;
 public class SearchFactory implements ToolWindowFactory, Condition<Project> {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        SearchBar searchBar = new SearchBar();
+        TestIdeaPlugin searchBar = new TestIdeaPlugin();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(searchBar.getComponent(), "搜索", false);
         toolWindow.getContentManager().addContent(content);

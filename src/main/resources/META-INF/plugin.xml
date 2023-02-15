@@ -49,8 +49,7 @@ https://juejin.cn/post/7132360828409348104
         -->
         <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="test.toolboxplugin" class="com.github.toolboxplugin.action.test" text="testTool"/>
-            <!--            <action id="toolBoxPlugin.search.button" class="com.github.toolboxplugin.toolWindowFactory.searchFactory" text="搜索"/>-->
+            <action id="test.toolboxplugin" class="com.github.toolboxplugin.action.TestIdeaPluginAction" text="Test Idea Plugin Action"/>
             <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.SearchAction"
                     text="Search for you" description="搜索功能"/>
         </group>

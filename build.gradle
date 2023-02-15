@@ -7,9 +7,9 @@ group 'com.github.toolBoxPlugin'
 //version '1.0' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
 
 //指定编码环境
-sourceCompatibility = 1.8
-//指定编译环境
-targetCompatibility = 1.8
+//sourceCompatibility = 1.8
+////指定编译环境
+//targetCompatibility = 1.8
 //设置编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
