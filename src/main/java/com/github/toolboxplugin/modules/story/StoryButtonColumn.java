@@ -1,4 +1,4 @@
-package com.github.toolboxplugin.swing.realize.test;
+package com.github.toolboxplugin.modules.story;
 
 
 import javax.swing.*;
@@ -9,19 +9,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//自定义JButton列，按钮每点击一次，进度条将+5
-public class TestButtonColumn extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, ActionListener {
+//自定义JButton列，点击查看按钮
+public class StoryButtonColumn extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, ActionListener {
     //按钮的两种状态
     private JButton rb, eb;
     private int row;
+    private int column;
     private JTable table;
-    private String text = "开始";
+    private JLabel label;
+    private JTabbedPane tabbedPane;
+    private String text = "阅读";
 
-    public TestButtonColumn(JTable table, int column) {
+    public StoryButtonColumn(JTable table, int column, JLabel label, JTabbedPane tabbedPane) {
         super();
         this.table = table;
-        rb = new JButton("开始");
-        eb = new JButton("开始");
+        this.label = label;
+        this.column = column;
+        this.tabbedPane = tabbedPane;
+        rb = new JButton(text);
+        eb = new JButton(text);
         eb.setFocusPainted(false);
         eb.addActionListener(this);
         //设置该单元格渲染和编辑样式
@@ -29,6 +35,7 @@ public class TestButtonColumn extends AbstractCellEditor implements TableCellEdi
         columnModel.getColumn(column).setCellRenderer(this);
         columnModel.getColumn(column).setCellEditor(this);
     }
+
 
     @Override
     public Object getCellEditorValue() {
@@ -39,9 +46,11 @@ public class TestButtonColumn extends AbstractCellEditor implements TableCellEdi
     //监听器方法
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        int v = Integer.parseInt(table.getValueAt(row, 3).toString());
-        //更新进度条 列的值
-        table.setValueAt(v + 5, row, 3);
+        //点击查看详情获取当前数据的唯一ID
+        label.setText("查看:《" + table.getValueAt(row, 2).toString() + "》目录");
+        //点击查看阅读，切换到阅读卡片
+        tabbedPane.setSelectedIndex(1);
+        //填充数据
     }
 
     @Override

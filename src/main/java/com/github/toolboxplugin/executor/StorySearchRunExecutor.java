@@ -1,18 +1,18 @@
 package com.github.toolboxplugin.executor;
 
+import com.github.toolboxplugin.config.GlobalConstant;
 import com.github.toolboxplugin.utils.IconUtil;
-import com.github.toolboxplugin.utils.StringConst;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class CustomRunExecutor extends Executor {
+public class StorySearchRunExecutor extends Executor {
 
     @Override
     public String getToolWindowId() {
-        return StringConst.TOOL_WINDOW_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
     @Override
@@ -33,38 +33,38 @@ public class CustomRunExecutor extends Executor {
 
     @Override
     public String getDescription() {
-        return StringConst.TOOL_WINDOW_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH + "窗口";
     }
 
     @NotNull
     @Override
     public String getActionName() {
-        return StringConst.TOOL_WINDOW_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
     @NotNull
     @Override
     public String getId() {
-        return StringConst.PLUGIN_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
     @NotNull
     @Override
     public String getStartActionText() {
-        return StringConst.TOOL_WINDOW_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
     @Override
     public String getContextActionId() {
-        return "custom context action id";
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
     @Override
     public String getHelpId() {
-        return StringConst.TOOL_WINDOW_ID;
+        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
     }
 
-    public static Executor getRunExecutorInstance() {
-        return ExecutorRegistry.getInstance().getExecutorById(StringConst.PLUGIN_ID);
+    public Executor getRunExecutorInstance(String id) {
+        return ExecutorRegistry.getInstance().getExecutorById(id);
     }
 }

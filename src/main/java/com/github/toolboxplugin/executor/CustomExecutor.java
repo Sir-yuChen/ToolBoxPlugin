@@ -1,9 +1,10 @@
 package com.github.toolboxplugin.executor;
 
-import com.github.toolboxplugin.utils.StringConst;
+import com.github.toolboxplugin.utils.IconUtil;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.Executor;
+import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.filters.TextConsoleBuilder;
@@ -25,6 +26,7 @@ import com.sun.istack.NotNull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.UUID;
 
 /**
  * @Author zhangyu
@@ -35,12 +37,11 @@ import java.awt.*;
 public class CustomExecutor implements Disposable {
 
     private ConsoleView consoleView = null;
-
     private Project project = null;
     private Runnable rerunAction;
-    private Runnable stopAction;
+    private Runnable refreshAction;
 
-    private Computable<Boolean> stopEnabled;
+    private Computable<Boolean> refreshEnabled;
 
 
     public CustomExecutor withReturn(Runnable returnAction) {
@@ -48,9 +49,9 @@ public class CustomExecutor implements Disposable {
         return this;
     }
 
-    public CustomExecutor withStop(Runnable stopAction, Computable<Boolean> stopEnabled) {
-        this.stopAction = stopAction;
-        this.stopEnabled = stopEnabled;
+    public CustomExecutor withRefresh(Runnable refreshAction, Computable<Boolean> refreshEnabled) {
+        this.refreshAction = refreshAction;
+        this.refreshEnabled = refreshEnabled;
         return this;
     }
 
@@ -70,19 +71,19 @@ public class CustomExecutor implements Disposable {
         Disposer.dispose(this);
     }
 
-    public void run(JComponent jComponent) {
+    public void run(JComponent jComponent, String toolWindowId) {
+        String uuid = UUID.randomUUID().toString();
         //传递一个对象
         if (project.isDisposed()) {
             return;
         }
-
-        Executor executor = CustomRunExecutor.getRunExecutorInstance();
+        Executor executor = ExecutorRegistry.getInstance().getExecutorById(toolWindowId);
         if (executor == null) {
             return;
         }
 
         final RunnerLayoutUi.Factory factory = RunnerLayoutUi.Factory.getInstance(project);
-        RunnerLayoutUi layoutUi = factory.create("runnerId", "runnerTitle", "sessionName", project);
+        RunnerLayoutUi layoutUi = factory.create(uuid, "runnerTitle", "sessionName", project);
         final JPanel consolePanel = createConsolePanel(consoleView);
 
         RunContentDescriptor descriptor = new RunContentDescriptor(new RunProfile() {
@@ -105,7 +106,8 @@ public class CustomExecutor implements Disposable {
             }
         }, new DefaultExecutionResult(), layoutUi);
         descriptor.setExecutionId(System.nanoTime());
-        final Content content = layoutUi.createContent(StringConst.SEO_CONTENT_ID, jComponent, jComponent.getName(), AllIcons.Debugger.Console, consolePanel);
+//        StringConst.SEO_CONTENT_ID
+        final Content content = layoutUi.createContent(uuid, jComponent, jComponent.getName(), AllIcons.Debugger.Console, consolePanel);
         content.setCloseable(true);
         layoutUi.getOptions().setLeftToolbar(createActionToolbar(consolePanel, consoleView, layoutUi, descriptor, executor), "RunnerToolbar");
 
@@ -116,6 +118,14 @@ public class CustomExecutor implements Disposable {
         Disposer.register(content, consoleView);
 
         ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
+    }
+
+    private ActionGroup createActionToolbar(JPanel consolePanel, ConsoleView consoleView, RunnerLayoutUi layoutUi, RunContentDescriptor descriptor, Executor executor) {
+        final DefaultActionGroup actionGroup = new DefaultActionGroup();
+        actionGroup.add(new RerunAction(consolePanel, consoleView));
+        actionGroup.add(new RefreshAction());
+        actionGroup.add(new CustomAction("custom action", "custom action", IconUtil.ICON));
+        return actionGroup;
     }
 
     private JPanel createConsolePanel(ConsoleView consoleView) {
@@ -146,28 +156,23 @@ public class CustomExecutor implements Disposable {
         }
     }
 
-    private class StopAction extends AnAction implements DumbAware {
-        public StopAction() {
-            super("Stop", "Stop", AllIcons.Actions.Suspend);
+    //刷新页面
+    private class RefreshAction extends AnAction implements DumbAware {
+
+        public RefreshAction() {
+            super("Refresh", "刷新当前页面", AllIcons.Actions.Refresh);
         }
 
         @Override
         public void actionPerformed(AnActionEvent e) {
-            stopAction.run();
+            refreshAction.run();
         }
 
         @Override
         public void update(AnActionEvent e) {
-            e.getPresentation().setVisible(stopAction != null);
-            e.getPresentation().setEnabled(stopEnabled != null && stopEnabled.compute());
+            e.getPresentation().setVisible(refreshAction != null);
+            e.getPresentation().setEnabled(refreshEnabled != null && refreshEnabled.compute());
         }
-    }
-
-    private ActionGroup createActionToolbar(JPanel consolePanel, ConsoleView consoleView, RunnerLayoutUi layoutUi, RunContentDescriptor descriptor, Executor executor) {
-        final DefaultActionGroup actionGroup = new DefaultActionGroup();
-        actionGroup.add(new RerunAction(consolePanel, consoleView));
-        actionGroup.add(new StopAction());
-        return actionGroup;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.toolboxplugin.swing.realize;
+package com.github.toolboxplugin.modules;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

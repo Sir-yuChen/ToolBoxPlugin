@@ -34,11 +34,14 @@ https://juejin.cn/post/7132360828409348104
         <!-- secondary:true表示设置在tool window bar最下方 参考：https://www.jianshu.com/p/676201ef113c -->
         <toolWindow id="ToolBoxPlugin"
                     anchor="right"
-                    factoryClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory"
+                    factoryClass="com.github.toolboxplugin.factory.SearchFactory"
                     secondary="true"/>
-<!--                    conditionClass="com.github.toolboxplugin.toolWindowFactory.SearchFactory"-->
+        <!--                    conditionClass="com.github.toolboxplugin.factory.SearchFactory"-->
 
-        <executor implementation="com.github.toolboxplugin.executor.CustomRunExecutor" id="CustomRunExecutor"/>
+        <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
+
+        <applicationService
+                serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting"/>
     </extensions>
     <!-- 编写插件动作 -->
     <actions>
@@ -49,9 +52,8 @@ https://juejin.cn/post/7132360828409348104
         -->
         <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="test.toolboxplugin" class="com.github.toolboxplugin.action.TestIdeaPluginAction" text="Test Idea Plugin Action"/>
             <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.SearchAction"
-                    text="Search for you" description="搜索功能"/>
+                    text="iReader" description="图书阅读"/>
         </group>
     </actions>
 </idea-plugin>

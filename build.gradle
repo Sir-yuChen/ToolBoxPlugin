@@ -30,14 +30,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.alibaba:fastjson:1.2.60'
-    // webmagic java爬虫
-    implementation 'us.codecraft:webmagic-core:0.7.3'
-    implementation 'us.codecraft:webmagic-extension:0.7.3'
-
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-
-
-
 }
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {

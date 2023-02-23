@@ -1,4 +1,4 @@
-package com.github.toolboxplugin.swing.realize;
+package com.github.toolboxplugin.modules;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -14,7 +14,7 @@ public class TableModel extends AbstractTableModel {
     private Integer editoredRowAndColumn[];
 
     public TableModel(List<Class> type, List<String> title, List<List<Object>> data, Integer[] editoredRowAndColumn) {
-        this.cellType = type;
+//        this.cellType = type;
         this.data = data;
         this.title = title;
         this.editoredRowAndColumn = editoredRowAndColumn;
@@ -54,7 +54,7 @@ public class TableModel extends AbstractTableModel {
     //重写isCellEditable方法
     @Override
     public boolean isCellEditable(int r, int c) {
-        if (find(editoredRowAndColumn, c) != -1) {
+        if (editoredRowAndColumn != null && find(editoredRowAndColumn, c) != -1) {
             return true;
         }
         return false;
