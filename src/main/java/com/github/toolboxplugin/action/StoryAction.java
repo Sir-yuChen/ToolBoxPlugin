@@ -11,7 +11,7 @@ import com.intellij.openapi.project.Project;
  * 搜索按钮
  *   1. 触发toolwindow框，实现搜索功能
  * */
-public class SearchAction extends AnAction {
+public class StoryAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {

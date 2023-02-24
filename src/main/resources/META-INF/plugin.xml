@@ -52,7 +52,7 @@ https://juejin.cn/post/7132360828409348104
         -->
         <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.SearchAction"
+            <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.StoryAction"
                     text="iReader" description="图书阅读"/>
         </group>
     </actions>
