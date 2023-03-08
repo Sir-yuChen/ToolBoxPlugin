@@ -31,12 +31,18 @@ https://juejin.cn/post/7132360828409348104
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 声明该插件对IDEA core或其他插件的扩展 -->
-        <!-- secondary:true表示设置在tool window bar最下方 参考：https://www.jianshu.com/p/676201ef113c -->
-        <toolWindow id="ToolBoxPlugin"
+        <!--
+            secondary:true表示设置在tool window bar最下方   参考：https://www.jianshu.com/p/676201ef113c
+            anchor: right或bottom
+            canCloseContents 关闭
+            canCloseContents="true"
+         -->
+        <toolWindow id="Toolboxplugin"
                     anchor="right"
-                    factoryClass="com.github.toolboxplugin.factory.SearchFactory"
-                    secondary="true"/>
-        <!--                    conditionClass="com.github.toolboxplugin.factory.SearchFactory"-->
+                    factoryClass="com.github.toolboxplugin.factory.MusicToolWindowFactory"
+                    secondary="true"
+                    icon="/images/icons/music.svg"
+        />
 
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
 

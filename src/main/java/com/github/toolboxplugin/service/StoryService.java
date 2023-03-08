@@ -16,7 +16,7 @@ import java.util.List;
 public class StoryService {
 
     public LryStoryResultDTO searchStory(String selectBoxText, String searchWord, Integer currentPage, Integer pageSize) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.SEO_HTTP_URL, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
         LryStoryResultDTO lryStoryResultDTO = null;
         String data = OkHttpUtil.builder().url(ipApiUrl + "/fiction/search/")
                 .addHeader("Content-Type", "text/html;charset=utf-8")
@@ -32,7 +32,7 @@ public class StoryService {
     }
 
     public StoryDirectoryDTO getStoryDirectory(String fictionId) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.SEO_HTTP_URL, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
         StoryDirectoryDTO storyDirectoryDTO = null;
         String data = OkHttpUtil.builder().url(ipApiUrl + "/fictionChapter/search/")
                 .addHeader("Content-Type", "text/html;charset=utf-8")
@@ -48,7 +48,7 @@ public class StoryService {
     }
 
     public StoryContentDTO getStoryDirContent(String chapterId) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.SEO_HTTP_URL, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
         StoryContentDTO storyContentDTO = null;
         String data = OkHttpUtil.builder().url(ipApiUrl + "/fictionContent/search/")
                 .addHeader("Content-Type", "text/html;charset=utf-8")

@@ -1,8 +1,12 @@
 package com.github.toolboxplugin.utils;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.extensions.PluginId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 /**
@@ -18,7 +22,18 @@ public class PropertiesUtil {
         //放src目录下的.properties
         ResourceBundle resource = ResourceBundle.getBundle(propertiesPath);
         String v = resource.getString(key);
-        logger.info("获取配置文件 key={} value={}", key,v);
+//        logger.info("获取配置文件 key={} value={}", key, v);
         return v;
+    }
+
+    /**
+     * idea插件路径
+     */
+    public static String getPropertiesPath() {
+        PluginId pluginId = PluginId.getId("com.github.toolboxplugin");
+        IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
+        File path = plugin.getPath();
+        String pluginPath = path.getAbsolutePath();
+        return pluginPath;
     }
 }

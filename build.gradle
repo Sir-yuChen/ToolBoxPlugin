@@ -30,6 +30,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.alibaba:fastjson:1.2.60'
+
+
+
 }
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {

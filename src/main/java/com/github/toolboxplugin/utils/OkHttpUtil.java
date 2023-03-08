@@ -10,6 +10,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -38,9 +39,9 @@ public class OkHttpUtil {
                 if (okHttpClient == null) {
                     TrustManager[] trustManagers = buildTrustManagers();
                     okHttpClient = new OkHttpClient.Builder()
-                            .connectTimeout(15, TimeUnit.SECONDS)
-                            .writeTimeout(20, TimeUnit.SECONDS)
-                            .readTimeout(20, TimeUnit.SECONDS)
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .writeTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(15, TimeUnit.SECONDS)
                             .sslSocketFactory(createSSLSocketFactory(trustManagers), (X509TrustManager) trustManagers[0])
                             .hostnameVerifier((hostName, session) -> true)
                             .retryOnConnectionFailure(true)
@@ -102,11 +103,28 @@ public class OkHttpUtil {
     }
 
     /**
+     * 添加参数 Map方式
+     */
+    public OkHttpUtil addMapParam(Map<String, Object> params) {
+        if (params != null && params.size() > 0) {
+            if (paramMap == null) {
+                paramMap = new LinkedHashMap<>(16);
+            }
+            params.forEach((key, value) -> {
+                paramMap.put(key, value.toString());
+            });
+        }
+        return this;
+    }
+
+    /**
      * get 带参方式 =  / 两种方式
      */
     public OkHttpUtil addParameter(String key) {
         if (key != null) {
             transmit = key;
+        } else {
+            transmit = "=";
         }
         return this;
     }
@@ -134,9 +152,8 @@ public class OkHttpUtil {
     public OkHttpUtil get() {
         request = new Request.Builder().get();
         StringBuilder urlBuilder = new StringBuilder(url);
-        if (paramMap != null) {
+        if (paramMap != null && transmit != null) {
             try {
-
                 switch (transmit) {
                     case "/":
                         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
@@ -156,8 +173,6 @@ public class OkHttpUtil {
                     default:
                         logger.error("未知符合");
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -209,7 +224,22 @@ public class OkHttpUtil {
             return "请求失败：" + e.getMessage();
         }
     }
-
+    /**
+     * 同步请求 请求文件流
+     *
+     * @return
+     */
+    public InputStream syncFileStream() {
+        setHeader(request);
+        try {
+            Response response = okHttpClient.newCall(request.build()).execute();
+            assert response.body() != null;
+            return response.body().byteStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     /**
      * 异步请求，有返回值
      */
@@ -253,7 +283,7 @@ public class OkHttpUtil {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 assert response.body() != null;
-                callBack.onSuccessful(call, response.body().string());
+                callBack.onSuccessful(call, response.body());
             }
         });
     }
@@ -269,7 +299,7 @@ public class OkHttpUtil {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 assert response.body() != null;
-                callBack.onSuccessful(call, response.body().string());
+                callBack.onSuccessful(call, response.body());
             }
         });
     }
@@ -333,7 +363,7 @@ public class OkHttpUtil {
      */
     public interface ICallBack {
 
-        void onSuccessful(Call call, String data);
+        void onSuccessful(Call call, ResponseBody responseBody);
 
         void onFailure(Call call, String errorMsg);
 
@@ -341,17 +371,14 @@ public class OkHttpUtil {
 
     public static void main(String[] args) {
         // get请求，方法顺序按照这种方式，切记选择post/get一定要放在倒数第二，同步或者异步倒数第一，才会正确执行
-        OkHttpUtil.builder().url("请求地址，http/https都可以")
-                // 有参数的话添加参数，可多个
-                .addParam("参数名", "参数值")
-                .addParam("参数名", "参数值")
-                // 也可以添加多个
+        String sync = OkHttpUtil.builder().url("http://cloud-music.pl-fe.cn/login/qr/key")
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .get()
                 // 可选择是同步请求还是异步请求
                 //.async();
                 .sync();
-
+        System.out.println("sync = " + sync);
+/*
         // post请求，分为两种，一种是普通表单提交，一种是json提交
         OkHttpUtil.builder().url("请求地址，http/https都可以")
                 // 有参数的话添加参数，可多个
@@ -379,6 +406,6 @@ public class OkHttpUtil {
             public void onFailure(Call call, String errorMsg) {
                 // 请求失败后的处理
             }
-        });
+        });*/
     }
 }

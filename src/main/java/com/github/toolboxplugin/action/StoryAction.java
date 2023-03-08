@@ -25,9 +25,8 @@ public class StoryAction extends AnAction {
         }
         CustomExecutor executor = new CustomExecutor(project);
         StorySearch storySearch = new StorySearch();
-        // 设置restart和refresh
-        //storySearch新增刷新函数，传递给按钮
-        executor.withReturn(() -> runExecutor(project)).withRefresh(storySearch.Refresh(), () ->
+        // 设置restart和stop
+        executor.withReturn(() -> runExecutor(project)).withRefresh(() -> ConfigUtil.setRunning(project, false), () ->
                 ConfigUtil.getRunning(project));
         executor.run(storySearch.getComponent(), storySearch.getToolWindowId());
     }
