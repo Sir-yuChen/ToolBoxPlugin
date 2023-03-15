@@ -35,6 +35,12 @@ public class MusicPromptLabel {
             case "refresh_pages":
                 label.setText("刷新成功");
                 break;
+            case "page_add":
+                label.setText("当前已是最后一页");
+                break;
+            case "page_deduct":
+                label.setText("当前已是第一页");
+                break;
             default:
                 label.setText("畅想音乐");
                 break;

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.toolboxplugin.config.GlobalConstant;
 import com.github.toolboxplugin.model.ReturnCode;
+import com.github.toolboxplugin.model.music.NewSongListDto;
 import com.github.toolboxplugin.model.music.PlayLisitsDto;
 import com.github.toolboxplugin.utils.OkHttpUtil;
 import com.github.toolboxplugin.utils.PropertiesUtil;
@@ -53,6 +54,25 @@ public class MusicCommonService {
         PlayLisitsDto playLisitsDto = JSONObject.toJavaObject(JSON.parseObject(data), PlayLisitsDto.class);
         if (playLisitsDto.getCode().equals(ReturnCode.SUCCESS_MUSIC.getCode())) {
             return playLisitsDto;
+        }
+        return null;
+    }
+
+    /***
+     * 推荐新音乐
+     */
+    public NewSongListDto getNewSong(String limit) {
+        String domain = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.music.wangyiyun");
+        String path = PropertiesUtil.readProperties(GlobalConstant.REQUEST_HTTP_URL, "request.music.login.top.playlist");
+        String data = OkHttpUtil.builder().url(domain + path)
+                .addParam("limit", limit == null ? "30" : limit)
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addParameter("=")
+                .get()
+                .sync();
+        NewSongListDto newSongListDto = JSONObject.toJavaObject(JSON.parseObject(data), NewSongListDto.class);
+        if (newSongListDto.getCode().equals(ReturnCode.SUCCESS_MUSIC.getCode())) {
+            return newSongListDto;
         }
         return null;
     }

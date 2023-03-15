@@ -30,3 +30,5 @@ java、Gradle、Swing UI、
 https://binaryify.github.io/NeteaseCloudMusicApi/
 
 http://cloud-music.pl-fe.cn/top/playlist?limit=10&order=hot
+
+由于对网易云接口返回字段理解，和swing布局困难，项目暂停

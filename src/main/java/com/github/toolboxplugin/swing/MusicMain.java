@@ -2,15 +2,16 @@ package com.github.toolboxplugin.swing;
 
 import com.github.toolboxplugin.config.GlobalConstant;
 import com.github.toolboxplugin.model.music.CheckQrStatus;
+import com.github.toolboxplugin.model.music.NewSongListDto;
 import com.github.toolboxplugin.model.music.PlayLisitsDto;
 import com.github.toolboxplugin.model.music.SongListDto;
+import com.github.toolboxplugin.modules.music.MusicJpanel;
 import com.github.toolboxplugin.service.music.MusicCommonService;
 import com.github.toolboxplugin.service.music.MusicUserService;
 import com.github.toolboxplugin.swing.handle.music.MusicPromptLabel;
 import com.github.toolboxplugin.utils.Base64Utils;
 import com.github.toolboxplugin.utils.OkHttpUtil;
 import com.github.toolboxplugin.utils.PropertiesUtil;
-import com.intellij.ui.components.JBScrollPane;
 import okhttp3.Call;
 import okhttp3.ResponseBody;
 import org.apache.logging.log4j.LogManager;
@@ -50,16 +51,12 @@ public class MusicMain implements BaseUIAction {
     private JPanel musicMainPanel;
     private JPanel homeTopPanel;
     private JLabel homePromptLabel;
-    private JScrollPane homeBelowSPane;
     private JPanel userAvatarPanel;
     private JPanel userInfoPanel;
     private JLabel userAvatarLabel;
-    private JPanel homebelowPanel;
-    private JTabbedPane myTabbedPane;
-    private JPanel userPlayLists;
-    private JPanel playsRecord;
+    private JScrollPane homeBelowSPane;
     private Integer currentPage = 1;
-    private Integer pageSize = 30;
+    private Integer pageSize = 6;
     private Integer totalPage;
 
     private Boolean LoginFlage = false; //登录标识
@@ -80,7 +77,6 @@ public class MusicMain implements BaseUIAction {
      */
     @Override
     public void setBefore() {
-        homebelowPanel = new JPanel();
         userAvatarPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
         MusicUserService musicUserService = new MusicUserService();
         //1. 校验用户是否已经登录，刷新登录状态
@@ -90,7 +86,6 @@ public class MusicMain implements BaseUIAction {
             homePromptLabel = musicPromptLabel.homeTopPromptLabelHandle(homePromptLabel, "init_login_init");
         } else {
             userInfoPanel.setVisible(false);
-            myTabbedPane.setVisible(false);
             homePromptLabel = musicPromptLabel.homeTopPromptLabelHandle(homePromptLabel, "init_login_N");
             userLogin();
         }
@@ -121,41 +116,28 @@ public class MusicMain implements BaseUIAction {
      * 填充首页非登录模块展示，推荐，发现，我的
      */
     public void fillHomeBelowSPane() {
-        //jpanel布局
+        JPanel homebelowPanel = new JPanel();
+        //jpanel布局  未登录，展示网友推荐歌单，单曲推荐，排行榜，热门评论
         homebelowPanel.setLayout(new GridLayout(5, 1, 3, 1));
-        //禁止水平滑动
+        //1.歌单推荐模块
+        fillHotPlaylistJPanel(homebelowPanel, currentPage == 1 ? currentPage : currentPage + 1);
+        //2.新单曲推荐
+        fillNewSonglistJPanel(homebelowPanel);
         homeBelowSPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        //1. 未登录，展示网友推荐歌单，单曲推荐，排行榜，热门评论
-        JPanel hotPlaylistJPanel = new JPanel();
-        //组合边框
-        CompoundBorder border = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1), BorderFactory.createTitledBorder("好听的歌单"));
-        hotPlaylistJPanel.setBorder(border);
-        MusicCommonService musicCommonService = new MusicCommonService();
-        PlayLisitsDto playLisitsDto = musicCommonService.TopPlaylists("hot", null, pageSize, currentPage);
-        if (totalPage == null) {
-            totalPage = playLisitsDto.getTotal() % pageSize == 0 ? playLisitsDto.getTotal() / pageSize : playLisitsDto.getTotal() / pageSize + 1;
-        }
-        if (currentPage < totalPage) {
-            currentPage += 1;
-        }
-        //TODO-zy no dispay
-        List<SongListDto> playlists = playLisitsDto.getPlaylists();
-//        hotPlaylistJPanel.setLayout(new GridLayout(1, playlists.size(), 2, 0));
-        //设置panel的首选大小，同时保证宽高大于JScrollPane的宽高，这样下面的JScrollPane才会出现滚动条
-        hotPlaylistJPanel.setPreferredSize(new Dimension(playlists.size() * 150, 150));
-        for (SongListDto item : playlists) {
-            syncGetImgIcon(item.getCoverImgUrl(), hotPlaylistJPanel);
-        }
-        JScrollPane hotPlaylistSJPanel = new JBScrollPane(hotPlaylistJPanel);
-        hotPlaylistSJPanel.setBounds(10, 10, hotPlaylistJPanel.getWidth() + 10, hotPlaylistJPanel.getWidth() + 10);
-
-        JPanel singlesJPanel = new JPanel(new GridLayout(1, playlists.size(), 5, 0));
-        CompoundBorder bor = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1), BorderFactory.createTitledBorder("好听的单曲"));
-        singlesJPanel.setBorder(bor);
-        homebelowPanel.add(hotPlaylistJPanel);
-        homebelowPanel.add(new JBScrollPane(singlesJPanel));
         homeBelowSPane.setViewportView(homebelowPanel);
+    }
+
+    /***
+     * 热门单曲
+     */
+    private void fillNewSonglistJPanel(JPanel homebelowPanel) {
+        JPanel hotSongJp = new JPanel();
+        CompoundBorder border = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1), BorderFactory.createTitledBorder("好听的新单曲"));
+        hotSongJp.setBorder(border);
+        MusicCommonService musicCommonService = new MusicCommonService();
+        NewSongListDto newSong = musicCommonService.getNewSong("50");
+        //TODO-zy 展示推荐的新单曲
+        homebelowPanel.add(hotSongJp);
     }
 
 
@@ -233,7 +215,6 @@ public class MusicMain implements BaseUIAction {
                         LoginFlage = true;
                         //登录信息
                         userInfoPanel.setVisible(true);
-                        myTabbedPane.setVisible(false);
                         //停止轮询任务
                         scheduler.shutdown();
                         break;
@@ -248,10 +229,41 @@ public class MusicMain implements BaseUIAction {
     }
 
     /***
+     * 填充 推荐歌单模块
+     *
+     */
+    public void fillHotPlaylistJPanel(JPanel homebelowPanel, Integer page) {
+        currentPage = page;
+        MusicJpanel musicJpanel = new MusicJpanel(currentPage, homebelowPanel, this);
+        MusicPromptLabel musicPromptLabel = new MusicPromptLabel();
+        //组合边框
+        CompoundBorder border = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.white, 1), BorderFactory.createTitledBorder("好听的歌单"));
+        musicJpanel.setBorder(border);
+        if (totalPage != null && page > totalPage) {
+            homePromptLabel = musicPromptLabel.homeTopPromptLabelHandle(homePromptLabel, "page_add");
+            return;
+        }
+        if (page < 1) {
+            homePromptLabel = musicPromptLabel.homeTopPromptLabelHandle(homePromptLabel, "page_deduct");
+            return;
+        }
+        MusicCommonService musicCommonService = new MusicCommonService();
+        PlayLisitsDto playLisitsDto = musicCommonService.TopPlaylists("hot", null, pageSize, currentPage);
+        totalPage = playLisitsDto.getTotal() % pageSize == 0 ? playLisitsDto.getTotal() / pageSize : playLisitsDto.getTotal() / pageSize + 1;
+
+        List<SongListDto> playlists = playLisitsDto.getPlaylists();
+        for (SongListDto item : playlists) {
+            asyncGetImgIcon(item, musicJpanel);
+        }
+        homebelowPanel.add(musicJpanel);
+    }
+
+
+    /***
      * 异步加载图片
      */
-    private void syncGetImgIcon(String url, JPanel imgPanel) {
-        OkHttpUtil.builder().url(url)
+    private void asyncGetImgIcon(SongListDto dto, JPanel imgPanel) {
+        OkHttpUtil.builder().url(dto.getCoverImgUrl())
                 .addHeader("Content-Type", "image/jpg")
                 .addParameter("=")
                 .get()
@@ -260,14 +272,24 @@ public class MusicMain implements BaseUIAction {
                     public void onSuccessful(Call call, ResponseBody responseBody) {
                         try {
                             BufferedImage bufferedImage = ImageIO.read(responseBody.byteStream());
-                            Image itemImage = bufferedImage.getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
+                            Image itemImage = bufferedImage.getScaledInstance(130, 140, BufferedImage.SCALE_SMOOTH);
                             ImageIcon imageIcon = new ImageIcon(itemImage);
+//                            JPanel infoJp = new JPanel(new GridLayout(2, 1, 2, 2));
+//                            infoJp.setBorder(BorderFactory.createLineBorder(Color.blue, 1));
+                            //图片
                             JLabel playJLabel = new JLabel();
-                            playJLabel.setLayout(new GridLayout(2, 1, 0, 1));
+                            playJLabel.setLayout(new GridLayout());
                             playJLabel.setIcon(imageIcon);
-//                            playJLabel.add(new JLabel("你好"));
-                            //向上对对齐
-                            playJLabel.setVerticalAlignment(SwingConstants.TOP);
+//                            playJLabel.setVerticalAlignment(SwingConstants.CENTER);
+                            playJLabel.setBorder(BorderFactory.createLineBorder(Color.blue, 1));
+                            //歌单名
+//                            JLabel textJL = new JLabel();
+//                            textJL.setText(dto.getName());
+                            playJLabel.setText(dto.getName());
+
+                   /*         infoJp.add(textJL);
+                            infoJp.add(playJLabel);*/
+
                             imgPanel.add(playJLabel);
                         } catch (Exception e) {
                             logger.error("加载图片异常error={}", e);
@@ -280,5 +302,6 @@ public class MusicMain implements BaseUIAction {
                     }
                 });
     }
+
 
 }
