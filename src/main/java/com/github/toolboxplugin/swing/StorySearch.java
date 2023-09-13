@@ -262,8 +262,10 @@ public class StorySearch implements BaseUIAction {
         if (collectButton.getText().equals("收 藏")) {
             StoryBookshelfDTO dto = new StoryBookshelfDTO();
             int row = resultTable.getSelectedRow();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-            String t = df.format(new Date());// new Date()为获取当前系统时间，也可使用当前时间戳
+            //设置日期格式
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // new Date()为获取当前系统时间，也可使用当前时间戳
+            String t = df.format(new Date());
             dto.setFictionId(fictionIdLast);
             dto.setTitle(resultTable.getValueAt(row, 2).toString());
             dto.setAuthor(resultTable.getValueAt(row, 3).toString());

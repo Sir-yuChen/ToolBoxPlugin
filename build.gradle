@@ -31,8 +31,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.alibaba:fastjson:1.2.60'
 
-
-
 }
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {

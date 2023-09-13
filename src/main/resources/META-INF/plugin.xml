@@ -37,12 +37,15 @@ https://juejin.cn/post/7132360828409348104
             canCloseContents 关闭
             canCloseContents="true"
          -->
-        <toolWindow id="Toolboxplugin"
-                    anchor="right"
-                    factoryClass="com.github.toolboxplugin.factory.MusicToolWindowFactory"
-                    secondary="true"
-                    icon="/images/icons/music.svg"
-        />
+        <!--
+            音乐模块暂时无法实现
+             <toolWindow id="Toolboxplugin"
+                          anchor="right"
+                          factoryClass="com.github.toolboxplugin.factory.MusicToolWindowFactory"
+                          secondary="true"
+                          icon="/images/icons/music.svg"
+              />
+          -->
 
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
 
