@@ -1,60 +1,65 @@
 package com.github.toolboxplugin.model.DTO;
 
-
-public  class StoryBookshelfDTO {
+public class StoryBookshelfDTO {
     //属性必须被public修饰
     public String fictionId;
     public String title;
     public String author;
     public String fictionType;
-    public String LastReadTime;
+    public String lastReadTime;
     public DirectoryChapter chapter;
+
+    public String getLastReadTime() {
+        return lastReadTime;
+    }
+
+    public StoryBookshelfDTO setLastReadTime(String lastReadTime) {
+        this.lastReadTime = lastReadTime;
+        return this;
+    }
 
     public String getFictionId() {
         return fictionId;
     }
 
-    public void setFictionId(String fictionId) {
+    public StoryBookshelfDTO setFictionId(String fictionId) {
         this.fictionId = fictionId;
+        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public StoryBookshelfDTO setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public StoryBookshelfDTO setAuthor(String author) {
         this.author = author;
+        return this;
     }
 
     public String getFictionType() {
         return fictionType;
     }
 
-    public void setFictionType(String fictionType) {
+    public StoryBookshelfDTO setFictionType(String fictionType) {
         this.fictionType = fictionType;
-    }
-
-    public String getLastReadTime() {
-        return LastReadTime;
-    }
-
-    public void setLastReadTime(String lastReadTime) {
-        LastReadTime = lastReadTime;
+        return this;
     }
 
     public DirectoryChapter getChapter() {
         return chapter;
     }
 
-    public void setChapter(DirectoryChapter chapter) {
+    public StoryBookshelfDTO setChapter(DirectoryChapter chapter) {
         this.chapter = chapter;
+        return this;
     }
 }

@@ -9,7 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//自定义JButton列，点击查看按钮
+/**
+ * @author Administrator
+ * @desc 自定义JButton列，点击阅读图书按钮
+ * @date 2023/9/14 10:49
+ * @since v1.0
+ */
 public class StoryButtonColumn extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, ActionListener {
     //按钮的两种状态
     private JButton rb, eb;
@@ -47,10 +52,11 @@ public class StoryButtonColumn extends AbstractCellEditor implements TableCellEd
     @Override
     public void actionPerformed(ActionEvent arg0) {
         //点击查看详情获取当前数据的唯一ID
-        label.setText("查看:《" + table.getValueAt(row, 2).toString() + "》目录");
+        label.setText("正在阅读:《" + table.getValueAt(row, 3).toString() + "》目录");
         //点击查看阅读，切换到阅读卡片
-        tabbedPane.setSelectedIndex(1);
+        tabbedPane.setSelectedIndex(2);
         //填充数据
+
     }
 
     @Override

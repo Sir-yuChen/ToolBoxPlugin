@@ -1,4 +1,4 @@
-package com.github.toolboxplugin.modules;
+package com.github.toolboxplugin.modules.story;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -76,5 +76,4 @@ public class TableModel extends AbstractTableModel {
         }
         return -1;
     }
-
 }

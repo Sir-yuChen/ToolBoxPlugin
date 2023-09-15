@@ -28,16 +28,25 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
+    implementation group: 'cn.hutool', name: 'hutool-all', version: '5.8.21'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.alibaba:fastjson:1.2.60'
 
 }
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    // 这里是指打插件包的时候用idea什么版本的依赖包打
-    // 比如这里用2019.3打包，如果你的插件实现源码里用了2019.3不存在的依赖包或类，就会报错
-    // 一般就填当前IDEA的版本号即可
+    /**
+     * NOTE
+     * @author: zy* @date: 2023/9/13 18:09
+     * @description: 这里是指打插件包的时候用idea什么版本的依赖包打,比如这里用2019.3打包，如果你的插件实现源码里用了2019.3不存在的依赖包或类，就会报错,
+     * 一般就填当前IDEA的版本号即可
+     */
 //    plugins = ['com.intellij.java']
+    /** NOTE
+     * @author: zy* @date: 2023/9/13 18:08
+     * @description: build.gradle文件：org.jetbrains.intellij与JDK与gradle版本需要一一对应
+     */
     version = '2020.1.2'
 //    sandboxDirectory = "$project.buildDir/myCustom-sandbox"
 }
@@ -47,8 +56,10 @@ patchPluginXml {
       1.0版本.
       第1.0版本：初始化这个工具箱插件项目.<br>
       """
-
-    // 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA
-    // 这里配置sinceBuild=191，表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
+    /**
+     * NOTE
+     * @author: zy* @date: 2023/9/13 18:10
+     * @description: 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA,这里配置sinceBuild=191，表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
+     */
 //    sinceBuild ="201"
 }

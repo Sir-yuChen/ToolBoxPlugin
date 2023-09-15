@@ -15,10 +15,17 @@ import java.util.List;
 
 public class StoryService {
 
+    /**
+     * @author Administrator
+     * @date 2023/9/14 10:16
+     * @desc  分页条件搜索图书
+     */
     public LryStoryResultDTO searchStory(String selectBoxText, String searchWord, Integer currentPage, Integer pageSize) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.iReader");
+        String path = PropertiesUtil.readProperties(GlobalConstant.REQUEST_HTTP_URL, "request.iReader.book.search");
+
         LryStoryResultDTO lryStoryResultDTO = null;
-        String data = OkHttpUtil.builder().url(ipApiUrl + "/fiction/search/")
+        String data = OkHttpUtil.builder().url(ipApiUrl + path)
                 .addHeader("Content-Type", "text/html;charset=utf-8")
                 .addParam("option", selectBoxText == null ? "title" : selectBoxText)
                 .addParam("key", searchWord)
@@ -32,7 +39,7 @@ public class StoryService {
     }
 
     public StoryDirectoryDTO getStoryDirectory(String fictionId) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.iReader");
         StoryDirectoryDTO storyDirectoryDTO = null;
         String data = OkHttpUtil.builder().url(ipApiUrl + "/fictionChapter/search/")
                 .addHeader("Content-Type", "text/html;charset=utf-8")
@@ -48,7 +55,7 @@ public class StoryService {
     }
 
     public StoryContentDTO getStoryDirContent(String chapterId) {
-        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.seo.lryApi");
+        String ipApiUrl = PropertiesUtil.readProperties(GlobalConstant.DOMAIN_CONFIG, "toolBoxPlugin.iReader");
         StoryContentDTO storyContentDTO = null;
         String data = OkHttpUtil.builder().url(ipApiUrl + "/fictionContent/search/")
                 .addHeader("Content-Type", "text/html;charset=utf-8")

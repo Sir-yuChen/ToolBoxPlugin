@@ -1,4 +1,4 @@
-<!--[可选项]可指定插件主页，用于在商店插件页展示
+<!--[可选项]可指定插件主页，用于在商店插件页展示 plugin.xml项目清单文件
 https://juejin.cn/post/7132360828409348104
 -->
 <idea-plugin url="https://example.com/my-plugin-site">
@@ -15,22 +15,24 @@ https://juejin.cn/post/7132360828409348104
 
     <!-- 插件的描述 （不能使用默认值，必须修改成自己的。并且需要大于40个字符）-->
     <description><![CDATA[
-           Toolbox这是一款工具箱插件,里面包含各种开发工具,全部有java语言编写,包括搜索、展示、阅读等功能. <br>
-      <em> Toolbox 工具箱 </em>
+           ToolBoxPlugin这是一款工具箱插件,里面包含各种开发工具,全部有java语言编写,包括搜索、展示、阅读等功能. <br>
+      <em> ToolBoxPlugin 工具箱 </em>
     ]]></description>
     <!-- 插件版本变更信息，支持HTML标签；
          将展示在 settings | Plugins 对话框和插件仓库的Web页面 -->
     <change-notes><![CDATA[
-      1. 搜索展示<br>
-      2. 阅读、预览<br>
-      <p>Toolbox 工具箱功能迭代中...</p>
+      1. 图书阅读<br>
+        a. 搜索BOOK<br>
+        b. 阅读BOOK<br>
+        c. 书架管理<br>
+      <p>ToolBoxPlugin 工具箱功能迭代中...</p>
     ]]>
     </change-notes>
     <!-- 插件所依赖的其他插件的id -->
     <depends>com.intellij.modules.platform</depends>
 
+    <!-- 声明该插件对IDEA core或其他插件的扩展 -->
     <extensions defaultExtensionNs="com.intellij">
-        <!-- 声明该插件对IDEA core或其他插件的扩展 -->
         <!--
             secondary:true表示设置在tool window bar最下方   参考：https://www.jianshu.com/p/676201ef113c
             anchor: right或bottom
@@ -48,11 +50,14 @@ https://juejin.cn/post/7132360828409348104
           -->
 
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
-
         <applicationService
                 serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting"/>
     </extensions>
-    <!-- 编写插件动作 -->
+
+    <!-- 编写插件动作 注册Action
+            一个 Action 表示 IDEA 菜单里的一个 menu item 或工具栏上的一个按钮，通过继承 AnAction class 实现，
+            当选择一个 menu item 或点击工具栏上的按钮时，就会调用 AnAction 类的 actionPerformed 方法
+     -->
     <actions>
         <!--
             group-id -> 要绑定的菜单组ID
@@ -60,9 +65,15 @@ https://juejin.cn/post/7132360828409348104
             relative-to-action -> 当anchor的值在before after其中一个时,需要此字段指定相对的一个菜单操作
         -->
         <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
+            <!-- MainMenu 主菜单的最后项-->
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.StoryAction"
                     text="iReader" description="图书阅读"/>
         </group>
+        <!--
+            <group> 元素会定义一个 action group（多个action），设置 action group 的 id、文本、描述
+            <action> 元素会定义一个 action，指定 action 的 id、实现类、显示文本、描述
+            <add-to-group> 元素指定其外部 action 或 action group 被添加到的位置
+        -->
     </actions>
 </idea-plugin>

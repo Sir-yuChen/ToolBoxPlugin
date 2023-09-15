@@ -12,7 +12,7 @@ public class StorySearchRunExecutor extends Executor {
 
     @Override
     public String getToolWindowId() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     @Override
@@ -33,35 +33,35 @@ public class StorySearchRunExecutor extends Executor {
 
     @Override
     public String getDescription() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH + "窗口";
+        return GlobalConstant.TOOL_WINDOW_ID_iReader + "窗口";
     }
 
     @NotNull
     @Override
     public String getActionName() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     @NotNull
     @Override
     public String getId() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     @NotNull
     @Override
     public String getStartActionText() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     @Override
     public String getContextActionId() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     @Override
     public String getHelpId() {
-        return GlobalConstant.TOOL_WINDOW_ID_SEARCH;
+        return GlobalConstant.TOOL_WINDOW_ID_iReader;
     }
 
     public Executor getRunExecutorInstance(String id) {
