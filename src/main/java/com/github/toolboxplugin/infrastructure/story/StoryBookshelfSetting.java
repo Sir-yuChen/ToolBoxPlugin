@@ -31,6 +31,16 @@ public class StoryBookshelfSetting implements PersistentStateComponent<StoryBook
         public void setStoryBookshelfDTOs(List<StoryBookshelfDTO> storyBookshelfDTOs) {
             this.storyBookshelfDTOs = storyBookshelfDTOs;
         }
+
+        public Boolean delStoryBookshelfDTO(StoryBookshelfDTO param) {
+            try {
+                List<StoryBookshelfDTO> collect = storyBookshelfDTOs.stream().filter(dto -> !param.getFictionId().equals(dto.fictionId)).collect(Collectors.toList());
+                this.storyBookshelfDTOs = collect;
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
     }
 
     public static StoryBookshelfSetting getInstance() {
@@ -56,6 +66,14 @@ public class StoryBookshelfSetting implements PersistentStateComponent<StoryBook
 
     public void setLocalStoryBookshelf(List<StoryBookshelfDTO> storys) {
         state.setStoryBookshelfDTOs(storys);
+    }
+
+    public Boolean delLocalStoryBookshelf(StoryBookshelfDTO param) {
+        if (param == null) {
+            return false;
+        }
+        Boolean aBoolean = state.delStoryBookshelfDTO(param);
+        return aBoolean;
     }
 
     public List<StoryBookshelfDTO> getLocalStoryBookshelf() {

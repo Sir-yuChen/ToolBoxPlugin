@@ -9,8 +9,12 @@ idea插件开发，工具箱
 java、Gradle、Swing UI、
 
 ## 图书模块
+> 支持功能：搜索展示、阅读、收藏\取消收藏、我的书架
+![搜索展示图书](./src/main/resources/files/ireader/搜索.jpg)
 
+![我的图书](./src/main/resources/files/ireader/书架.jpg)
 
+![阅读图书](./src/main/resources/files/ireader/阅读.jpg)
 
 ## Music模块[关闭]
 1. 登录逻辑--- 仅支持扫码登录

@@ -8,7 +8,7 @@ public class TableModel extends AbstractTableModel {
     private List<Class> cellType;
     //表头
     private List<String> title;
-    //模拟数据
+    //数据
     private List<List<Object>> data;
     //可以被编辑的列
     private Integer editoredRowAndColumn[];
@@ -19,13 +19,6 @@ public class TableModel extends AbstractTableModel {
         this.title = title;
         this.editoredRowAndColumn = editoredRowAndColumn;
     }
-
-   /* @Override
-    public Class<?> getColumnClass(int arg0) {
-        // TODO Auto-generated method stub
-        return cellType[arg0];
-    }*/
-
     @Override
     public String getColumnName(int arg0) {
         // TODO Auto-generated method stub
@@ -62,7 +55,7 @@ public class TableModel extends AbstractTableModel {
 
     //重写setValueAt方法
     @Override
-    public void setValueAt(Object value, int r, int c) {
+     public void setValueAt(Object value, int r, int c) {
         Object o = data.get(r).get(c);
         o = value;
         this.fireTableCellUpdated(r, c);

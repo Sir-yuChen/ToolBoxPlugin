@@ -21,16 +21,14 @@ public class StoryButtonColumn extends AbstractCellEditor implements TableCellEd
     private int row;
     private int column;
     private JTable table;
-    private JLabel label;
-    private JTabbedPane tabbedPane;
-    private String text = "阅读";
+    private String text;
 
-    public StoryButtonColumn(JTable table, int column, JLabel label, JTabbedPane tabbedPane) {
+    public StoryButtonColumn(JTable table, int column, String textButton) {
         super();
         this.table = table;
-        this.label = label;
         this.column = column;
-        this.tabbedPane = tabbedPane;
+        this.text = textButton;
+
         rb = new JButton(text);
         eb = new JButton(text);
         eb.setFocusPainted(false);
@@ -48,16 +46,10 @@ public class StoryButtonColumn extends AbstractCellEditor implements TableCellEd
         return null;
     }
 
-    //监听器方法
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        //点击查看详情获取当前数据的唯一ID
-        label.setText("正在阅读:《" + table.getValueAt(row, 3).toString() + "》目录");
-        //点击查看阅读，切换到阅读卡片
-        tabbedPane.setSelectedIndex(2);
-        //填充数据
-
     }
+
 
     @Override
     public Component getTableCellRendererComponent(JTable arg0, Object value,
