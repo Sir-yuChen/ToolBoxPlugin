@@ -48,7 +48,6 @@ intellij {
      * @description: build.gradle文件：org.jetbrains.intellij与JDK与gradle版本需要一一对应
      */
     version = '2020.1.2'
-//    sandboxDirectory = "$project.buildDir/myCustom-sandbox"
 }
 
 patchPluginXml {

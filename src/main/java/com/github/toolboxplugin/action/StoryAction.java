@@ -7,10 +7,13 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 
-/*
- * 搜索按钮
- *   1. 触发toolwindow框，实现搜索功能
- * */
+
+/**
+ * @author Administrator
+ * @date 2023/9/19 16:09
+ * @since v1.0
+ * @desc 默认搜索模式 触发toolwindow框，实现搜索展示等功能
+ */
 public class StoryAction extends AnAction {
 
     @Override

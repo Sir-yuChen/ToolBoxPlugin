@@ -13,6 +13,7 @@ public class GlobalConstant {
     public static final String TOOL_WINDOW_ID_iReader = "ToolBoxPlugin_iReader";
     public static final String TOOL_WINDOW_ID_TEST = "ToolBoxPluginTest";
     public static final String SEO_CONTENT_ID = "toolBoxPlugin.seo";
+    public static final String TOOL_WINDOW_ID_iReader_debug = "ToolBoxPlugin_iReader_debug";
 
     //music
     public static final String TOOL_WINDOW_ID_MUSIC = "ToolBoxPluginMusic";

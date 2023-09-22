@@ -48,12 +48,11 @@ https://juejin.cn/post/7132360828409348104
                           icon="/images/icons/music.svg"
               />
           -->
-
+        <!-- Add your extensions here -->
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
         <applicationService
                 serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting"/>
     </extensions>
-
     <!-- 编写插件动作 注册Action
             一个 Action 表示 IDEA 菜单里的一个 menu item 或工具栏上的一个按钮，通过继承 AnAction class 实现，
             当选择一个 menu item 或点击工具栏上的按钮时，就会调用 AnAction 类的 actionPerformed 方法
@@ -63,12 +62,17 @@ https://juejin.cn/post/7132360828409348104
             group-id -> 要绑定的菜单组ID
             anchor -> 顺序位置 枚举值有:first last before after
             relative-to-action -> 当anchor的值在before after其中一个时,需要此字段指定相对的一个菜单操作
+            popup 决定该Group是否允许子菜单
         -->
-        <group id="plugin.main.menu.button" text="ToolBoxPlugin" description="工具箱">
+        <group id="plugin.toolBoxPlugin" text="ToolBoxPlugin" description="工具箱">
             <!-- MainMenu 主菜单的最后项-->
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="plugin.main.menu.search" class="com.github.toolboxplugin.action.StoryAction"
-                    text="iReader" description="图书阅读"/>
+            <group id="plugin.toolBoxPlugin.iReader" text="iReader" popup="true">
+                <action id="iReader_1" class="com.github.toolboxplugin.action.StoryAction"
+                        text="搜索/阅读" description="搜索阅读"/>
+                <action id="iReader_2" class="com.github.toolboxplugin.action.StoryDebugAction"
+                        text="调试模式"/>
+            </group>
         </group>
         <!--
             <group> 元素会定义一个 action group（多个action），设置 action group 的 id、文本、描述
