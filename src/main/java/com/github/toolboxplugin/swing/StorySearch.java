@@ -783,5 +783,4 @@ public class StorySearch implements BaseUIAction {
         }
         return null;
     }
-
 }

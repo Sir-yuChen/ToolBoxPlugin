@@ -6,6 +6,7 @@ package com.github.toolboxplugin.model.DTO;
 public class DirectoryChapter {
     private String title;
     private String chapterId;
+    private String chapterUrl;
 
     public DirectoryChapter setTitle(String title) {
         this.title = title;
@@ -15,6 +16,15 @@ public class DirectoryChapter {
     public DirectoryChapter setChapterId(String chapterId) {
         this.chapterId = chapterId;
         return this;
+    }
+
+    public DirectoryChapter setChapterUrl(String chapterUrl) {
+        this.chapterUrl = chapterUrl;
+        return this;
+    }
+
+    public String getChapterUrl() {
+        return chapterUrl;
     }
 
     public String getTitle() {

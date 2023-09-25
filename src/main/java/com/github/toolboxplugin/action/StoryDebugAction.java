@@ -3,6 +3,8 @@ package com.github.toolboxplugin.action;
 import com.github.toolboxplugin.swing.StoryDebug;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 
 /**
  * @author Administrator
@@ -14,9 +16,9 @@ public class StoryDebugAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-     /*   // 获取 JBPopupFactory
+        // 获取 JBPopupFactory
         JBPopupFactory instance = JBPopupFactory.getInstance();
-        *//* JBPopupFactory 自定义窗口
+        /*   JBPopupFactory 自定义窗口
          * createComponentPopupBuilder() 允许您在弹出窗口中显示任何Swing组件
          * createPopupChooserBuilder() 创建一个多选/单选框
          * createConfirmation() 创建一个确认框
@@ -26,13 +28,13 @@ public class StoryDebugAction extends AnAction {
          * 或者通过showUnderneathOf() 和ShowInCenter() 等方法显式指定位置。show() 方法立即返回，
          * 不等待弹出窗口关闭。如果需要在弹出窗口关闭时执行某些操作，可以使用addListener() 方法将侦听器附加到它，
          * 然后重写弹出试的方法,例如onChosen()，或在弹出窗口中将事件处理程序附加到您自己的组件
-         * *//*
-        StoryDebug storyDebug = new StoryDebug();
+         **/
+     /*   StoryDebug storyDebug = new StoryDebug();
         JBPopup popup = instance.createComponentPopupBuilder(storyDebug.getComponent(), null).createPopup();
         popup.setSize(new Dimension(500, 500));
         popup.showInBestPositionFor(event.getDataContext());*/
-
-        StoryDebug dialog = new StoryDebug();
+        Project project = event.getProject();
+        StoryDebug dialog = new StoryDebug(project);
         dialog.pack();
         dialog.setVisible(true);
     }
