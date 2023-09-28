@@ -58,10 +58,10 @@ public class StoryBookshelfSetting implements PersistentStateComponent<StoryBook
         this.state = state;
     }
 
-    public List<StoryBookshelfDTO> getStoryBookshelfById(String fId) {
+    public StoryBookshelfDTO getStoryBookshelfById(String fId) {
         List<StoryBookshelfDTO> storyBookshelf = state.getStoryBookshelfDTOs();
-        List<StoryBookshelfDTO> collect = storyBookshelf.stream().filter(item -> item.getFictionId().equals(fId)).collect(Collectors.toList());
-        return collect;
+        StoryBookshelfDTO storyBookshelfDTO = storyBookshelf.stream().filter(item -> item.getFictionId().equals(fId)).findFirst().orElse(null);
+        return storyBookshelfDTO;
     }
 
     public void setLocalStoryBookshelf(List<StoryBookshelfDTO> storys) {

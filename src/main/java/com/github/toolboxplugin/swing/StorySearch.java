@@ -376,7 +376,7 @@ public class StorySearch implements BaseUIAction {
         } else {
             List<StoryBookshelfDTO> storys = StoryBookshelfSetting.getInstance().getLocalStoryBookshelf();
             int row = bookshelfTable.getSelectedRow();
-            StoryBookshelfDTO dto = storys.stream().filter(item -> item.getFictionId().equals(bookshelfTable.getValueAt(row, 6))).findFirst().get();
+            StoryBookshelfDTO dto = storys.stream().filter(item -> item.getFictionId().equals(bookshelfTable.getValueAt(row, 6))).findFirst().orElse(null);
             StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
             collectButton.setText("收 藏");
         }
@@ -402,7 +402,7 @@ public class StorySearch implements BaseUIAction {
     public void delCollectButtonHandle() {
         List<StoryBookshelfDTO> storys = StoryBookshelfSetting.getInstance().getLocalStoryBookshelf();
         int row = bookshelfTable.getSelectedRow();
-        StoryBookshelfDTO dto = storys.stream().filter(item -> item.getFictionId().equals(bookshelfTable.getValueAt(row, 6))).findFirst().get();
+        StoryBookshelfDTO dto = storys.stream().filter(item -> item.getFictionId().equals(bookshelfTable.getValueAt(row, 6))).findFirst().orElse(null);
         StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
         showBookCollected();
     }
@@ -783,4 +783,5 @@ public class StorySearch implements BaseUIAction {
         }
         return null;
     }
+
 }

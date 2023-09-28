@@ -50,8 +50,13 @@ https://juejin.cn/post/7132360828409348104
           -->
         <!-- Add your extensions here -->
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
+        <!--数据存储文件配置-->
         <applicationService
                 serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting"/>
+        <applicationService
+                serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookRulesData"/>
+        <applicationService
+                serviceImplementation="com.github.toolboxplugin.infrastructure.story.IReaderDebugData"/>
     </extensions>
     <!-- 编写插件动作 注册Action
             一个 Action 表示 IDEA 菜单里的一个 menu item 或工具栏上的一个按钮，通过继承 AnAction class 实现，

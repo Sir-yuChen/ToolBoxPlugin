@@ -2,7 +2,8 @@ package com.github.toolboxplugin.model.DTO;
 
 public class IReaderDebugRuleDTO {
     public String ruleName;
-    public String chapterRuleInfo;
+    public String chapterTitleRuleInfo;
+    public String chapterUrlRuleInfo;
     public String contentRuleInfo;
 
     public IReaderDebugRuleDTO setRuleName(String ruleName) {
@@ -10,8 +11,13 @@ public class IReaderDebugRuleDTO {
         return this;
     }
 
-    public IReaderDebugRuleDTO setChapterRuleInfo(String chapterRuleInfo) {
-        this.chapterRuleInfo = chapterRuleInfo;
+    public IReaderDebugRuleDTO setChapterTitleRuleInfo(String chapterTitleRuleInfo) {
+        this.chapterTitleRuleInfo = chapterTitleRuleInfo;
+        return this;
+    }
+
+    public IReaderDebugRuleDTO setChapterUrlRuleInfo(String chapterUrlRuleInfo) {
+        this.chapterUrlRuleInfo = chapterUrlRuleInfo;
         return this;
     }
 
@@ -24,8 +30,12 @@ public class IReaderDebugRuleDTO {
         return ruleName;
     }
 
-    public String getChapterRuleInfo() {
-        return chapterRuleInfo;
+    public String getChapterTitleRuleInfo() {
+        return chapterTitleRuleInfo;
+    }
+
+    public String getChapterUrlRuleInfo() {
+        return chapterUrlRuleInfo;
     }
 
     public String getContentRuleInfo() {
