@@ -3,6 +3,7 @@ package com.github.toolboxplugin.model.DTO;
 public class StoryBookshelfDTO {
     //属性必须被public修饰
     public String fictionId;
+    public String bookSource;//图书来源
     public String title;
     public String author;
     public String fictionType;
@@ -25,6 +26,15 @@ public class StoryBookshelfDTO {
     public StoryBookshelfDTO setFictionId(String fictionId) {
         this.fictionId = fictionId;
         return this;
+    }
+
+    public StoryBookshelfDTO setBookSource(String bookSource) {
+        this.bookSource = bookSource;
+        return this;
+    }
+
+    public String getBookSource() {
+        return bookSource;
     }
 
     public String getTitle() {

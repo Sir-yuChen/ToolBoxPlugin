@@ -1,6 +1,6 @@
 package com.github.toolboxplugin.action;
 
-import com.github.toolboxplugin.swing.StoryDebug;
+import com.github.toolboxplugin.swing.IReaderDebug;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -12,7 +12,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
  * @desc 自定义调试模式
  * @since v1.0
  */
-public class StoryDebugAction extends AnAction {
+public class IReaderDebugAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -29,12 +29,12 @@ public class StoryDebugAction extends AnAction {
          * 不等待弹出窗口关闭。如果需要在弹出窗口关闭时执行某些操作，可以使用addListener() 方法将侦听器附加到它，
          * 然后重写弹出试的方法,例如onChosen()，或在弹出窗口中将事件处理程序附加到您自己的组件
          **/
-     /*   StoryDebug storyDebug = new StoryDebug();
+     /*   IReaderDebug storyDebug = new IReaderDebug();
         JBPopup popup = instance.createComponentPopupBuilder(storyDebug.getComponent(), null).createPopup();
         popup.setSize(new Dimension(500, 500));
         popup.showInBestPositionFor(event.getDataContext());*/
         Project project = event.getProject();
-        StoryDebug dialog = new StoryDebug(project);
+        IReaderDebug dialog = new IReaderDebug(project);
         dialog.pack();
         dialog.setVisible(true);
     }

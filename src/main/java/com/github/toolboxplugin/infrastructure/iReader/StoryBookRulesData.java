@@ -1,4 +1,4 @@
-package com.github.toolboxplugin.infrastructure.story;
+package com.github.toolboxplugin.infrastructure.iReader;
 
 
 import com.github.toolboxplugin.model.DTO.IReaderDebugRuleDTO;

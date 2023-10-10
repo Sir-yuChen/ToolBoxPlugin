@@ -1,6 +1,6 @@
 package com.github.toolboxplugin.service.webMagic.pipeline;
 
-import com.github.toolboxplugin.infrastructure.story.IReaderDebugData;
+import com.github.toolboxplugin.infrastructure.iReader.IReaderDebugData;
 import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

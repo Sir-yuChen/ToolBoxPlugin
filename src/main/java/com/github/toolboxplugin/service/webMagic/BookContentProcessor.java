@@ -19,9 +19,8 @@ import java.util.List;
 public class BookContentProcessor implements PageProcessor {
 
     private static Logger logger = LogManager.getLogger(BookContentProcessor.class);
-
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
     private IReaderDebugDTO iReaderDebugDTO;
+    private Site site;
 
     public BookContentProcessor(IReaderDebugDTO dtoAndCheck) {
         this.iReaderDebugDTO = dtoAndCheck;
@@ -43,6 +42,11 @@ public class BookContentProcessor implements PageProcessor {
 
     @Override
     public Site getSite() {
+        site = Site.me()
+                //.setCharset("utf-8") //设置编码
+                .setRetryTimes(3)
+                .setSleepTime(1000)
+                .setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
         return site;
     }
 }

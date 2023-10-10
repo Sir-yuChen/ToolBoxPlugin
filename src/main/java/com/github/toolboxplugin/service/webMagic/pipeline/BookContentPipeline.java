@@ -41,6 +41,7 @@ public class BookContentPipeline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
         List<String> content = resultItems.get("bookContent");
         if (CollectionUtils.isEmpty(content)) {
+            contentPane.setText("未加载到章节内容,请刷新后重试");
             return;
         }
         //阅读框不可以编辑
@@ -65,14 +66,13 @@ public class BookContentPipeline implements Pipeline {
         for (int i = 0; i < content.size(); i++) {
             if (i == 0) {
                 html += "<div>";
-                html += "<h3>" + chapter.getTitle() + "</h3><br/>";
+                html += "<h3>" + chapter.getTitle() + "</h3>";
             }
             html += "<p>" + content.get(i) + "</p>";
             if (i == content.size() - 1) {
                 html += "</div>";
             }
         }
-
         try {
             htmledit.insertHTML(text_html, contentPane.getCaretPosition(),
                     html, 0, 0, HTML.Tag.HTML);

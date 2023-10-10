@@ -2,7 +2,7 @@ package com.github.toolboxplugin.swing;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.toolboxplugin.config.GlobalConstant;
-import com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting;
+import com.github.toolboxplugin.infrastructure.iReader.StoryBookshelfSetting;
 import com.github.toolboxplugin.model.DTO.*;
 import com.github.toolboxplugin.modules.ComboBoxModels;
 import com.github.toolboxplugin.modules.story.StoryButtonColumn;
@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StorySearch implements BaseUIAction {
+public class IReader implements BaseUIAction {
 
     private JPanel allJpanel;
     private JPanel searchJpanel;
@@ -81,11 +81,11 @@ public class StorySearch implements BaseUIAction {
     private String currentFictionId;
     //最后阅读的图书唯一ID
     private String fictionIdLast;
-    //上次被选择饿面板下标
+    //上次被选择的面板下标
     private int lastTabbedPaneIndex;
 
 
-    public StorySearch() {
+    public IReader(Integer selectedTabbedPaneIndex) {
         try {
             //初始化操作
             setBefore();
@@ -206,6 +206,7 @@ public class StorySearch implements BaseUIAction {
             delCollect.addActionListener(e -> {
                 delCollectButtonHandle();
             });
+            tabbedPane.setSelectedIndex(selectedTabbedPaneIndex);
         } catch (Exception e) {
             label.setText("运行异常,请刷新重试");
         }

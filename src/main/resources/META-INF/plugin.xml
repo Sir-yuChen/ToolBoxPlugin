@@ -52,11 +52,11 @@ https://juejin.cn/post/7132360828409348104
         <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
         <!--数据存储文件配置-->
         <applicationService
-                serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookshelfSetting"/>
+                serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.StoryBookshelfSetting"/>
         <applicationService
-                serviceImplementation="com.github.toolboxplugin.infrastructure.story.StoryBookRulesData"/>
+                serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.StoryBookRulesData"/>
         <applicationService
-                serviceImplementation="com.github.toolboxplugin.infrastructure.story.IReaderDebugData"/>
+                serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.IReaderDebugData"/>
     </extensions>
     <!-- 编写插件动作 注册Action
             一个 Action 表示 IDEA 菜单里的一个 menu item 或工具栏上的一个按钮，通过继承 AnAction class 实现，
@@ -73,10 +73,14 @@ https://juejin.cn/post/7132360828409348104
             <!-- MainMenu 主菜单的最后项-->
             <add-to-group group-id="MainMenu" anchor="last"/>
             <group id="plugin.toolBoxPlugin.iReader" text="iReader" popup="true">
-                <action id="iReader_1" class="com.github.toolboxplugin.action.StoryAction"
-                        text="搜索/阅读" description="搜索阅读"/>
-                <action id="iReader_2" class="com.github.toolboxplugin.action.StoryDebugAction"
+                <action id="iReader_search" class="com.github.toolboxplugin.action.IReaderSearchAction"
+                        text="搜索图书" description="搜索图书"/>
+                <action id="iReader_bookSlef" class="com.github.toolboxplugin.action.IReaderBookSlefAction"
+                        text="图书书架" description="图书书架"/>
+                <action id="iReader_debug" class="com.github.toolboxplugin.action.IReaderDebugAction"
                         text="调试模式"/>
+                <action id="iReader_debug_rules" class="com.github.toolboxplugin.action.IReaderSearchAction"
+                        text="调试规则"/>
             </group>
         </group>
         <!--

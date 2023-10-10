@@ -1,7 +1,7 @@
 package com.github.toolboxplugin.action;
 
 import com.github.toolboxplugin.executor.CustomExecutor;
-import com.github.toolboxplugin.swing.StorySearch;
+import com.github.toolboxplugin.swing.IReader;
 import com.github.toolboxplugin.utils.ConfigUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -14,7 +14,7 @@ import com.intellij.openapi.project.Project;
  * @since v1.0
  * @desc 默认搜索模式 触发toolwindow框，实现搜索展示等功能
  */
-public class StoryAction extends AnAction {
+public class IReaderSearchAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -27,7 +27,7 @@ public class StoryAction extends AnAction {
             return;
         }
         CustomExecutor executor = new CustomExecutor(project);
-        StorySearch storySearch = new StorySearch();
+        IReader storySearch = new IReader(0);
         // 设置restart和stop
         executor.withReturn(() -> runExecutor(project)).withRefresh(() -> ConfigUtil.setRunning(project, false), () ->
                 ConfigUtil.getRunning(project));
