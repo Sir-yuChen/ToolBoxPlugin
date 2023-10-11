@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
  * @date 2023/9/14 10:49
  * @since v1.0
  */
-public class StoryButtonColumn extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, ActionListener {
+public class IReaderButton extends AbstractCellEditor implements TableCellEditor, TableCellRenderer, ActionListener {
     //按钮的两种状态
     private JButton rb, eb;
     private int row;
@@ -23,7 +23,7 @@ public class StoryButtonColumn extends AbstractCellEditor implements TableCellEd
     private JTable table;
     private String text;
 
-    public StoryButtonColumn(JTable table, int column, String textButton) {
+    public IReaderButton(JTable table, int column, String textButton) {
         super();
         this.table = table;
         this.column = column;

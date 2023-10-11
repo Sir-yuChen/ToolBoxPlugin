@@ -2,19 +2,25 @@ package com.github.toolboxplugin.swing;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.toolboxplugin.config.GlobalConstant;
+import com.github.toolboxplugin.infrastructure.iReader.IReaderDebugData;
 import com.github.toolboxplugin.infrastructure.iReader.StoryBookshelfSetting;
 import com.github.toolboxplugin.model.DTO.*;
 import com.github.toolboxplugin.modules.ComboBoxModels;
-import com.github.toolboxplugin.modules.story.StoryButtonColumn;
+import com.github.toolboxplugin.modules.story.IReaderButton;
 import com.github.toolboxplugin.modules.story.StoryDirJListRender;
 import com.github.toolboxplugin.modules.story.TableModel;
 import com.github.toolboxplugin.service.StoryService;
+import com.github.toolboxplugin.service.webMagic.BookContentProcessor;
+import com.github.toolboxplugin.service.webMagic.pipeline.BookContentPipeline;
 import com.github.toolboxplugin.utils.LambadaTools;
+import com.github.toolboxplugin.utils.NotificationUtils;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 import org.apache.commons.lang3.StringUtils;
+import us.codecraft.webmagic.Spider;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -28,6 +34,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.github.toolboxplugin.swing.CommonFun.setColumnSize;
 
 public class IReader implements BaseUIAction {
 
@@ -64,7 +72,7 @@ public class IReader implements BaseUIAction {
     private JButton delCollect;
     private JPanel contentComponent;
 
-    private StoryButtonColumn storyButtonColumn;
+    private IReaderButton storyButtonColumn;
 
     private HTMLDocument text_html;
     private HTMLEditorKit htmledit;
@@ -84,17 +92,16 @@ public class IReader implements BaseUIAction {
     //上次被选择的面板下标
     private int lastTabbedPaneIndex;
 
+    private Project project;
 
-    public IReader(Integer selectedTabbedPaneIndex) {
+    public IReader(Integer selectedTabbedPaneIndex, Project project) {
         try {
+            this.project = project;
             //初始化操作
             setBefore();
             //搜索按钮点击监听
             searchButton.addActionListener(e -> {
                 label.setText("搜索中....");
-                searchWord = searchInput.getText();
-                selectBoxText = selectedBox.getSelectedItem().toString();
-                currentPage = 1;
                 searchStory();
                 upperPageButton.setVisible(true);
                 underPageButton.setVisible(true);
@@ -178,7 +185,7 @@ public class IReader implements BaseUIAction {
                 if (value == null) {//切换了书本，展示首页
                     return;
                 } else {
-                    getStoryDirContent(value.getChapterId(), value.getTitle());
+                    getStoryDirContent(value);
                 }
                 //如果为已经被收藏的图书，则需要更新当前图书的阅读章节
                 checkAndUpdateBookCollected();
@@ -266,14 +273,18 @@ public class IReader implements BaseUIAction {
      * 页面刷新功能
      */
     public Runnable Refresh() {
-        label.setText("刷新中....");
         return () -> {
             //搜索
-            if (tabbedPane.getSelectedIndex() == 0 && StringUtils.isNotBlank(searchWord)) {
+            if (tabbedPane.getSelectedIndex() == 0 && StringUtils.isNotBlank(searchInput.getText())) {
                 searchStory();
             }
+            //书架
+            if (tabbedPane.getSelectedIndex() == 1) {
+                setTextPromptLabel(null, bookshelfPromptLabel, "book_init", null);
+                showBookCollected();
+            }
             //阅读选项卡
-            if (tabbedPane.getSelectedIndex() == 1 && StringUtils.isNotBlank(fictionIdLast)) {
+            if (tabbedPane.getSelectedIndex() == 2 && StringUtils.isNotBlank(fictionIdLast)) {
                 StoryBookshelfDTO storyBookshelfDTO = new StoryBookshelfDTO();
                 if (checkBookCollected(fictionIdLast) == null && resultTable.getSelectedRow() >= 0) {
                     int row = resultTable.getSelectedRow();
@@ -284,11 +295,6 @@ public class IReader implements BaseUIAction {
                 }
                 setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "read_init", null);
                 getStoryDirectory(); //加载目录
-            }
-            //书架
-            if (tabbedPane.getSelectedIndex() == 2) {
-                setTextPromptLabel(null, bookshelfPromptLabel, "book_init", null);
-                showBookCollected();
             }
             label.setText("刷新成功");
         };
@@ -328,12 +334,12 @@ public class IReader implements BaseUIAction {
                     List<Object> objectArrayList = new ArrayList<>();
                     objectArrayList.add(index + 1);
                     objectArrayList.add(item.getTitle());
-                    objectArrayList.add(item.getChapter().getTitle());
+                    objectArrayList.add(item.getChapter() == null ? "" : item.getChapter().getTitle());
                     objectArrayList.add(item.getAuthor());
-                    objectArrayList.add(item.getFictionType());
+                    objectArrayList.add(item.getFictionType() == null ? "" : item.getFictionType());
                     objectArrayList.add(item.getLastReadTime());
                     objectArrayList.add(item.getFictionId());
-                    objectArrayList.add(item.getChapter().getChapterId());
+                    objectArrayList.add(item.getChapter() == null ? "" : item.getChapter().getChapterId());
                     resultTableData.add(objectArrayList);
                 }));
         //可以被编辑的列
@@ -404,7 +410,22 @@ public class IReader implements BaseUIAction {
         List<StoryBookshelfDTO> storys = StoryBookshelfSetting.getInstance().getLocalStoryBookshelf();
         int row = bookshelfTable.getSelectedRow();
         StoryBookshelfDTO dto = storys.stream().filter(item -> item.getFictionId().equals(bookshelfTable.getValueAt(row, 6))).findFirst().orElse(null);
-        StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
+        //判断图书来源是否为debug，删除图书对应本地数据
+        if (dto.getBookSource().equals("debug")) {
+            //清除数据
+            Boolean del = IReaderDebugData.getInstance().del(dto.getFictionId());
+            if (del) {
+                StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
+                NotificationUtils.setNotification("ToolboxPlugin IReader", "图书:" + dto.getTitle() + "删除成功",
+                        NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 2000);
+            } else {
+                NotificationUtils.setNotification("ToolboxPlugin IReader", "图书:" + dto.getTitle() + "删除失败,请刷新重试",
+                        NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
+            }
+        } else {
+            //非来着debug调试的图书
+            StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
+        }
         showBookCollected();
     }
 
@@ -434,6 +455,11 @@ public class IReader implements BaseUIAction {
      * 2. 页面表格展示搜索结果
      */
     public void searchStory() {
+        searchWord = searchInput.getText();
+        selectBoxText = selectedBox.getSelectedItem().toString();
+        if (currentPage == null) {
+            currentPage = 1;
+        }
         //1. 搜索类型判断，默认为box中第一项
         for (int i = 0; i < comboBoxValues.size(); i++) {
             String finalSelectBoxText = selectBoxText;
@@ -444,6 +470,12 @@ public class IReader implements BaseUIAction {
                     .collect(Collectors.toSet());
             if (collect != null && collect.size() >= 1) {
                 selectBoxText = collect.stream().findFirst().get();
+            }
+            if (i == comboBoxValues.size() - 1 && StringUtils.isBlank(finalSelectBoxText)) {
+                selectBoxText = comboBoxValues.get(0).entrySet()
+                        .stream()
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toSet()).stream().findFirst().get();
             }
         }
         //上一页 下一页 按钮显示
@@ -496,7 +528,7 @@ public class IReader implements BaseUIAction {
         TableModel lryStoryTableModel = new TableModel(null, titles, resultTableData, editoredRowAndColumn);
         resultTable.setModel(lryStoryTableModel);
 
-        storyButtonColumn = new StoryButtonColumn(resultTable, 0, "阅读") {
+        storyButtonColumn = new IReaderButton(resultTable, 0, "阅读") {
             //搜索结果阅读按钮监听
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -538,126 +570,162 @@ public class IReader implements BaseUIAction {
      * 获取图书目录
      */
     public void getStoryDirectory() {
-        StoryBookshelfDTO dto = checkBookCollected(fictionIdLast);
-        if (dto == null) {
-            //keepChapterId 说明阅读的不是书架上的书
-            int row = resultTable.getSelectedRow();
-            if (row < 0) {
-                return;
-            }
-            currentFictionId = resultTable.getValueAt(row, 2).toString();
-            if (currentFictionId == null) {
-                //说明当前阅读的和搜索后选择的结果相同，不在调用搜索接口
-                return;
-            }
-        } else {
-            //是书架上的书相当于执行继续阅读逻辑
-            keepChapterId = dto.getChapter().getChapterId();
-        }
-        if (fictionIdLast == null) {
-            fictionIdLast = currentFictionId;
-        }
-        StoryBookshelfDTO storyBookshelfDTO = new StoryBookshelfDTO();
-        if (checkBookCollected(fictionIdLast) == null && resultTable.getSelectedRow() >= 0) {
-            //"操作", "序号", "唯一ID", "书名", "作者", "类型", "描述", "最后更新时间", "封面"
-            int row = resultTable.getSelectedRow();
-            storyBookshelfDTO.setFictionId(resultTable.getValueAt(row, 2).toString())
-                    .setTitle(resultTable.getValueAt(row, 3).toString());
-        } else {
-            storyBookshelfDTO = checkBookCollected(fictionIdLast);
-        }
-
-        setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "read_init", null);
-        StoryService storyService = new StoryService();
-        StoryDirectoryDTO storyDirectory = storyService.getStoryDirectory(fictionIdLast);
-        if (storyDirectory == null) {
-            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
-            return;
-        } else {
-            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirY", storyDirectory.getCount());
-        }
-        //渲染页面
-        StoryDirectoryInfoDTO storyDirectoryData = storyDirectory.getData();
-        List<DirectoryChapter> chapterList = storyDirectoryData.getChapterList();
-        DefaultListModel dlm = new DefaultListModel<>();
-        StoryDirJListRender dirJListRender = new StoryDirJListRender();
-        dirlist.setCellRenderer(dirJListRender);
-        chapterList.stream().filter(item -> item.getTitle() != "" && item.getChapterId() != "").forEach(item -> {
-            dlm.addElement(item);
-        });
-        if (dlm == null) {
-            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
-        } else {
-            dirlist.setModel(dlm);
-        }
-        dirlist.setFixedCellWidth(100);
-        dirlist.setFixedCellHeight(20);
-        readDirectory.setViewportView(dirlist);
-        //允许选择模式，只能选择一个
-        dirlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        if (checkBookCollected(fictionIdLast) != null && keepChapterId != null) {
-            //已经存在书架上的书，继续阅读时定位到记录的章节
-            for (int i = 0; i < chapterList.size(); i++) {
-                if (chapterList.get(i).getChapterId().equals(keepChapterId)) {
-                    dirlist.setSelectedIndex(i);
+        try {
+            StoryBookshelfDTO dto = checkBookCollected(fictionIdLast);
+            if (dto == null) {
+                //keepChapterId 说明阅读的不是书架上的书
+                int row = resultTable.getSelectedRow();
+                if (row < 0) {
+                    return;
                 }
+                currentFictionId = resultTable.getValueAt(row, 2).toString();
+                if (currentFictionId == null) {
+                    //说明当前阅读的和搜索后选择的结果相同，不在调用搜索接口
+                    return;
+                }
+            } else {
+                //是书架上的书相当于执行继续阅读逻辑
+                keepChapterId = dto.getChapter().getChapterId();
             }
-        } else {
-            //加载阅读首页
-            showStoryHomeContent(storyDirectory);
+            if (fictionIdLast == null) {
+                fictionIdLast = currentFictionId;
+            }
+            StoryBookshelfDTO storyBookshelfDTO = new StoryBookshelfDTO();
+            if (checkBookCollected(fictionIdLast) == null && resultTable.getSelectedRow() >= 0) {
+                //"操作", "序号", "唯一ID", "书名", "作者", "类型", "描述", "最后更新时间", "封面"
+                int row = resultTable.getSelectedRow();
+                storyBookshelfDTO.setFictionId(resultTable.getValueAt(row, 2).toString())
+                        .setTitle(resultTable.getValueAt(row, 3).toString());
+            } else {
+                storyBookshelfDTO = checkBookCollected(fictionIdLast);
+            }
+            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "read_init", null);
+            //debug调试下的图书 加载目录
+            List<DirectoryChapter> chapterList = new ArrayList<>();
+            StoryDirectoryDTO storyDirectory = new StoryDirectoryDTO();
+            if (StringUtils.isNotBlank(storyBookshelfDTO.getBookSource()) && storyBookshelfDTO.getBookSource().equals("debug")) {
+                //本地获取目录信息
+                IReaderDebugDTO data = IReaderDebugData.getInstance().getDataById(fictionIdLast);
+                chapterList = data.getChapters();
+                storyDirectory.setData(new StoryDirectoryInfoDTO()
+                        .setAuthor(data.getBookAuthor())
+                        .setFictionId(data.getBookFictionId())
+                        .setChapterList(data.getChapters())
+                        .setDescs("")
+                        .setFictionType(data.getBookFictionType())
+                        .setUpdateTime(data.getBookLastReadTime())
+                );
+            } else {
+                StoryService storyService = new StoryService();
+                storyDirectory = storyService.getStoryDirectory(fictionIdLast);
+                if (storyDirectory == null) {
+                    setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
+                    return;
+                } else {
+                    setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirY", storyDirectory.getCount());
+                }
+                StoryDirectoryInfoDTO storyDirectoryData = storyDirectory.getData();
+                chapterList = storyDirectoryData.getChapterList();
+            }
+            DefaultListModel dlm = new DefaultListModel<>();
+            StoryDirJListRender dirJListRender = new StoryDirJListRender();
+            dirlist.setCellRenderer(dirJListRender);
+            chapterList.stream().filter(item -> item.getTitle() != "" && item.getChapterId() != "").forEach(item -> {
+                dlm.addElement(item);
+            });
+            if (dlm == null) {
+                setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
+            } else {
+                dirlist.setModel(dlm);
+            }
+            dirlist.setFixedCellWidth(160);
+            dirlist.setFixedCellHeight(20);
+            readDirectory.setViewportView(dirlist);
+            //允许选择模式，只能选择一个
+            dirlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            if (checkBookCollected(fictionIdLast) != null && keepChapterId != null) {
+                //已经存在书架上的书，继续阅读时定位到记录的章节
+                for (int i = 0; i < chapterList.size(); i++) {
+                    if (chapterList.get(i).getChapterId().equals(keepChapterId)) {
+                        dirlist.setSelectedIndex(i);
+                    }
+                }
+            } else {
+                //加载阅读首页
+                showStoryHomeContent(storyDirectory);
+            }
+        } catch (Exception e) {
+            NotificationUtils.setNotification("ToolboxPlugin IReader", "图书目录加载失败,请刷新重试！",
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
         }
     }
 
     /**
      * 获取章节内容
      */
-    public void getStoryDirContent(String chapterId, String title) {
-        StoryService storyService = new StoryService();
-        StoryContentDTO storyDirContent = storyService.getStoryDirContent(chapterId);
-        StoryBookshelfDTO storyBookshelfDTO = new StoryBookshelfDTO();
-        //获取目录，书架/搜索
-        StoryBookshelfDTO dto = checkBookCollected(fictionIdLast);
-        int row = resultTable.getSelectedRow();
-        if (dto == null && row >= 0) {
-            storyBookshelfDTO.setFictionId(resultTable.getValueAt(row, 2).toString())
-                    .setTitle(resultTable.getValueAt(row, 3).toString())
-                    .setChapter(new DirectoryChapter().setChapterId(chapterId).setTitle(title));
-        } else {
-            storyBookshelfDTO = dto;
-        }
-        if (storyDirContent == null) {
-            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
-            return;
-        } else {
-            setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirR", dirlist.getModel().getSize());
-        }
-        htmledit = new HTMLEditorKit();
-        //实例化一个HTMLEditorkit工具包，用来编辑和解析用来显示在jtextpane中的内容。
-        text_html = (HTMLDocument) htmledit.createDefaultDocument();
-        //使用HTMLEditorKit类的方法来创建一个文档类，HTMLEditorKit创建的类型默认为htmldocument。
-        contentPanel.setEditorKit(htmledit);
-        //设置jtextpane组件的编辑器工具包，是其支持html格式。
-        contentPanel.setContentType("text/html");
-        //设置编辑器要处理的文档内容类型，有text/html,text/rtf.text/plain三种类型。
-        contentPanel.setDocument(text_html);
-        String html = "";
-        for (int i = 0; i < storyDirContent.getData().size(); i++) {
-            if (i == 0) {
-                html += "<div>";
-                html += "<h3>" + title + "</h3><br/>";
+    public void getStoryDirContent(DirectoryChapter chapter) {
+        StoryBookshelfDTO bookshelf = StoryBookshelfSetting.getInstance().getStoryBookshelfById(fictionIdLast);
+        if (bookshelf != null && StringUtils.isNotBlank(bookshelf.getBookSource()) && bookshelf.getBookSource().equals("debug")) {
+            try {
+                IReaderDebugDTO iReaderDebugDTO = IReaderDebugData.getInstance().getDataById(bookshelf.fictionId);
+                String url = chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl());
+                Spider.create(new BookContentProcessor(iReaderDebugDTO, project))
+                        .addUrl(url)
+                        .addPipeline(new BookContentPipeline(iReaderDebugDTO, chapter, contentPanel, project))
+                        .run();
+            } catch (Exception ex) {
+                contentPanel.setText("章节内容加载失败,请重试。。。\n" + chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl()));
+                NotificationUtils.setNotification("ToolboxPlugin IReader", "加载章节内容失败,请重试！",
+                        NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
             }
-            html += "<p>" + storyDirContent.getData().get(i) + "</p><br/>";
-            if (i == storyDirContent.getData().size() - 1) {
-                html += "</div>";
+        } else {
+            StoryService storyService = new StoryService();
+            StoryContentDTO storyDirContent = storyService.getStoryDirContent(chapter.getChapterId());
+            StoryBookshelfDTO storyBookshelfDTO = new StoryBookshelfDTO();
+            //获取目录，书架/搜索
+            StoryBookshelfDTO dto = checkBookCollected(fictionIdLast);
+            int row = resultTable.getSelectedRow();
+            if (dto == null && row >= 0) {
+                storyBookshelfDTO.setFictionId(resultTable.getValueAt(row, 2).toString())
+                        .setTitle(resultTable.getValueAt(row, 3).toString())
+                        .setChapter(new DirectoryChapter().setChapterId(chapter.getChapterId()).setTitle(chapter.getTitle()));
+            } else {
+                storyBookshelfDTO = dto;
             }
-        }
-        try {
-            htmledit.insertHTML(text_html, contentPanel.getCaretPosition(),
-                    html, 0, 0, HTML.Tag.HTML);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (storyDirContent == null) {
+                setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirNull", null);
+                return;
+            } else {
+                setTextPromptLabel(storyBookshelfDTO, readPromptLabel, "dirR", dirlist.getModel().getSize());
+            }
+            htmledit = new HTMLEditorKit();
+            //实例化一个HTMLEditorkit工具包，用来编辑和解析用来显示在jtextpane中的内容。
+            text_html = (HTMLDocument) htmledit.createDefaultDocument();
+            //使用HTMLEditorKit类的方法来创建一个文档类，HTMLEditorKit创建的类型默认为htmldocument。
+            contentPanel.setEditorKit(htmledit);
+            //设置jtextpane组件的编辑器工具包，是其支持html格式。
+            contentPanel.setContentType("text/html");
+            //设置编辑器要处理的文档内容类型，有text/html,text/rtf.text/plain三种类型。
+            contentPanel.setDocument(text_html);
+            String html = "";
+            for (int i = 0; i < storyDirContent.getData().size(); i++) {
+                if (i == 0) {
+                    html += "<div>";
+                    html += "<h3>" + chapter.getTitle() + "</h3><br/>";
+                }
+                html += "<p>" + storyDirContent.getData().get(i) + "</p><br/>";
+                if (i == storyDirContent.getData().size() - 1) {
+                    html += "</div>";
+                }
+            }
+            try {
+                htmledit.insertHTML(text_html, contentPanel.getCaretPosition(),
+                        html, 0, 0, HTML.Tag.HTML);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         //检查图书是否存在与书架，更新阅读章节
         checkAndUpdateBookCollected();
@@ -758,20 +826,6 @@ public class IReader implements BaseUIAction {
                 return false;
         }
         return true;
-    }
-
-    /**
-     * 设置列表某一列的宽度
-     */
-    public void setColumnSize(JTable table, int index, int preferedWidth, int maxWidth, int minWidth) {
-        //表格的列模型
-        JTableHeader tableHeader = table.getTableHeader();
-        //得到第i个列对象
-        TableColumn column = tableHeader.getColumnModel().getColumn(index);
-        column.setPreferredWidth(preferedWidth);
-        column.setMaxWidth(maxWidth);
-        column.setMinWidth(minWidth);
-        column.setWidth(preferedWidth);
     }
 
     /**

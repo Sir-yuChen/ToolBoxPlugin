@@ -4,6 +4,7 @@ import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
 import com.github.toolboxplugin.utils.NotificationUtils;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.CollectionUtils;
@@ -21,19 +22,21 @@ public class BookContentProcessor implements PageProcessor {
     private static Logger logger = LogManager.getLogger(BookContentProcessor.class);
     private IReaderDebugDTO iReaderDebugDTO;
     private Site site;
+    private Project project;
 
-    public BookContentProcessor(IReaderDebugDTO dtoAndCheck) {
+    public BookContentProcessor(IReaderDebugDTO dtoAndCheck, Project project) {
         this.iReaderDebugDTO = dtoAndCheck;
+        this.project = project;
     }
 
     @Override
     // process是定制爬虫逻辑的核心接口，在这里编写抽取逻辑
     public void process(Page page) {
         logger.info("BookContentProcessor 开始解析页面 start");
-        List<String> content = page.getHtml().xpath(iReaderDebugDTO.getiReaderDebugRuleDTO().getContentRuleInfo()).all();
+        List<String> content = page.getHtml().xpath(iReaderDebugDTO.getContentRuleInfo()).all();
         if (CollectionUtils.isEmpty(content)) {
             NotificationUtils.setNotification("ToolboxPlugin IReader", "注意：未匹配到任何数据",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, iReaderDebugDTO.getProject(), 0);
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 0);
             return;
         }
         page.putField("bookContent", content);

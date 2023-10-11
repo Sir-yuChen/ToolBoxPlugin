@@ -49,7 +49,7 @@ https://juejin.cn/post/7132360828409348104
               />
           -->
         <!-- Add your extensions here -->
-        <executor implementation="com.github.toolboxplugin.executor.StorySearchRunExecutor" id="CustomRunExecutor"/>
+        <executor implementation="com.github.toolboxplugin.executor.IReaderRunExecutor" id="IReaderRunExecutor"/>
         <!--数据存储文件配置-->
         <applicationService
                 serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.StoryBookshelfSetting"/>
@@ -79,7 +79,7 @@ https://juejin.cn/post/7132360828409348104
                         text="图书书架" description="图书书架"/>
                 <action id="iReader_debug" class="com.github.toolboxplugin.action.IReaderDebugAction"
                         text="调试模式"/>
-                <action id="iReader_debug_rules" class="com.github.toolboxplugin.action.IReaderSearchAction"
+                <action id="iReader_debug_rules" class="com.github.toolboxplugin.action.IReaderRulesAction"
                         text="调试规则"/>
             </group>
         </group>

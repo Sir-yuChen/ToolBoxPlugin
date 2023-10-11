@@ -5,6 +5,7 @@ import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
 import com.github.toolboxplugin.utils.NotificationUtils;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import us.codecraft.webmagic.ResultItems;
@@ -30,11 +31,13 @@ public class BookContentPipeline implements Pipeline {
     private IReaderDebugDTO iReaderDebugDTO;
     private DirectoryChapter chapter;
     private JTextPane contentPane;
+    private Project project;
 
-    public BookContentPipeline(IReaderDebugDTO iReaderDebugDTO, DirectoryChapter chapter, JTextPane contentPane) {
+    public BookContentPipeline(IReaderDebugDTO iReaderDebugDTO, DirectoryChapter chapter, JTextPane contentPane, Project project) {
         this.iReaderDebugDTO = iReaderDebugDTO;
         this.chapter = chapter;
         this.contentPane = contentPane;
+        this.project = project;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class BookContentPipeline implements Pipeline {
         }
         //阅读框不可以编辑
         contentPane.setEditable(false);
-
+        contentPane.setCaretPosition(0);
         HTMLEditorKit htmledit = new HTMLEditorKit();
         //实例化一个HTMLEditorkit工具包，用来编辑和解析用来显示在jtextpane中的内容。
         HTMLDocument text_html = (HTMLDocument) htmledit.createDefaultDocument();
@@ -78,11 +81,10 @@ public class BookContentPipeline implements Pipeline {
                     html, 0, 0, HTML.Tag.HTML);
         } catch (BadLocationException e) {
             NotificationUtils.setNotification("ToolboxPlugin IReader", "章节内容加载失败请重试！",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, iReaderDebugDTO.getProject(), 3000);
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
         } catch (IOException e) {
             NotificationUtils.setNotification("ToolboxPlugin IReader", "章节内容加载失败请重试！",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, iReaderDebugDTO.getProject(), 3000);
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
         }
-
     }
 }

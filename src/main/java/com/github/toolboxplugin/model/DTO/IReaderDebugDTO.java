@@ -1,7 +1,5 @@
 package com.github.toolboxplugin.model.DTO;
 
-import com.intellij.openapi.project.Project;
-
 import java.util.List;
 
 public class IReaderDebugDTO {
@@ -11,18 +9,48 @@ public class IReaderDebugDTO {
     public String bookAuthor;
     public String bookFictionType;
     public String bookLastReadTime;
-    public Project project;
+    public String ruleName;
+    public String chapterTitleRuleInfo;
+    public String chapterUrlRuleInfo;
+    public String contentRuleInfo;
     public List<DirectoryChapter> chapters;
-    public IReaderDebugRuleDTO iReaderDebugRuleDTO;
 
-    public IReaderDebugRuleDTO getiReaderDebugRuleDTO() {
-        return iReaderDebugRuleDTO;
-    }
-
-    public IReaderDebugDTO setiReaderDebugRuleDTO(IReaderDebugRuleDTO iReaderDebugRuleDTO) {
-        this.iReaderDebugRuleDTO = iReaderDebugRuleDTO;
+    public IReaderDebugDTO setRuleName(String ruleName) {
+        this.ruleName = ruleName;
         return this;
     }
+
+    public IReaderDebugDTO setChapterTitleRuleInfo(String chapterTitleRuleInfo) {
+        this.chapterTitleRuleInfo = chapterTitleRuleInfo;
+        return this;
+    }
+
+    public IReaderDebugDTO setChapterUrlRuleInfo(String chapterUrlRuleInfo) {
+        this.chapterUrlRuleInfo = chapterUrlRuleInfo;
+        return this;
+    }
+
+    public IReaderDebugDTO setContentRuleInfo(String contentRuleInfo) {
+        this.contentRuleInfo = contentRuleInfo;
+        return this;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public String getChapterTitleRuleInfo() {
+        return chapterTitleRuleInfo;
+    }
+
+    public String getChapterUrlRuleInfo() {
+        return chapterUrlRuleInfo;
+    }
+
+    public String getContentRuleInfo() {
+        return contentRuleInfo;
+    }
+
 
     public IReaderDebugDTO setBookFictionId(String bookFictionId) {
         this.bookFictionId = bookFictionId;
@@ -57,15 +85,6 @@ public class IReaderDebugDTO {
     public IReaderDebugDTO setBookChapterInfoUrl(String bookChapterInfoUrl) {
         this.bookChapterInfoUrl = bookChapterInfoUrl;
         return this;
-    }
-
-    public IReaderDebugDTO setProject(Project project) {
-        this.project = project;
-        return this;
-    }
-
-    public Project getProject() {
-        return project;
     }
 
     public String getBookChapterInfoUrl() {

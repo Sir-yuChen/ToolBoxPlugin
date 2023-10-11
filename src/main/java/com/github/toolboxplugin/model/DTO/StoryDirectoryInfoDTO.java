@@ -11,59 +11,66 @@ public class StoryDirectoryInfoDTO {
     private String updateTime;
     private List<DirectoryChapter> chapterList;
 
-    public String getFictionId() {
-        return fictionId;
+    public StoryDirectoryInfoDTO setFictionId(String fictionId) {
+        this.fictionId = fictionId;
+        return this;
     }
 
-    public void setFictionId(String fictionId) {
-        this.fictionId = fictionId;
+    public StoryDirectoryInfoDTO setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public StoryDirectoryInfoDTO setDescs(String descs) {
+        this.descs = descs;
+        return this;
+    }
+
+    public StoryDirectoryInfoDTO setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    public StoryDirectoryInfoDTO setFictionType(String fictionType) {
+        this.fictionType = fictionType;
+        return this;
+    }
+
+    public StoryDirectoryInfoDTO setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
+
+    public StoryDirectoryInfoDTO setChapterList(List<DirectoryChapter> chapterList) {
+        this.chapterList = chapterList;
+        return this;
+    }
+
+    public String getFictionId() {
+        return fictionId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescs() {
         return descs;
-    }
-
-    public void setDescs(String descs) {
-        this.descs = descs;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getFictionType() {
         return fictionType;
-    }
-
-    public void setFictionType(String fictionType) {
-        this.fictionType = fictionType;
     }
 
     public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public List<DirectoryChapter> getChapterList() {
         return chapterList;
-    }
-
-    public void setChapterList(List<DirectoryChapter> chapterList) {
-        this.chapterList = chapterList;
     }
 }

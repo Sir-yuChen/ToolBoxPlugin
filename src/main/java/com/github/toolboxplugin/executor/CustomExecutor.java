@@ -1,6 +1,5 @@
 package com.github.toolboxplugin.executor;
 
-import com.github.toolboxplugin.utils.IconUtil;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.Executor;
@@ -124,7 +123,8 @@ public class CustomExecutor implements Disposable {
         final DefaultActionGroup actionGroup = new DefaultActionGroup();
         actionGroup.add(new RerunAction(consolePanel, consoleView));
         actionGroup.add(new RefreshAction());
-        actionGroup.add(new CustomAction("custom action", "custom action", IconUtil.ICON));
+        //自定义左侧操作项
+//        actionGroup.add(new CustomAction("custom action", "custom action", IconUtil.ICON));
         return actionGroup;
     }
 

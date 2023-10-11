@@ -5,6 +5,7 @@ import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
 import com.github.toolboxplugin.utils.NotificationUtils;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.CollectionUtils;
@@ -29,9 +30,11 @@ public class BookChapterProcessor implements PageProcessor {
     // 官方文档地址：http://webmagic.io/docs/zh/
     //https://blog.csdn.net/weixin_44431371/article/details/106813271
     private IReaderDebugDTO iReaderDebugDTO;
+    private Project project;
 
-    public BookChapterProcessor(IReaderDebugDTO dtoAndCheck) {
+    public BookChapterProcessor(IReaderDebugDTO dtoAndCheck, Project project) {
         this.iReaderDebugDTO = dtoAndCheck;
+        this.project = project;
     }
 
     @Override
@@ -39,12 +42,11 @@ public class BookChapterProcessor implements PageProcessor {
     public void process(Page page) {
         logger.info("BookChapterProcessor 开始解析页面 start");
         Html html = page.getHtml();
-        List<String> chapterTitleList = html.xpath(iReaderDebugDTO.getiReaderDebugRuleDTO().getChapterTitleRuleInfo()).all();
-        //TODO-zy解析html页面获取完整的章节目录地址
-        List<String> chapterUrlList = html.xpath(iReaderDebugDTO.getiReaderDebugRuleDTO().getChapterUrlRuleInfo()).all();
+        List<String> chapterTitleList = html.xpath(iReaderDebugDTO.getChapterTitleRuleInfo()).all();
+        List<String> chapterUrlList = html.xpath(iReaderDebugDTO.getChapterUrlRuleInfo()).all();
         if (CollectionUtils.isEmpty(chapterTitleList) || CollectionUtils.isEmpty(chapterUrlList)) {
             NotificationUtils.setNotification("ToolboxPlugin IReader", "注意：未匹配到任何数据",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, iReaderDebugDTO.getProject(), 0);
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 0);
             return;
         }
         List<DirectoryChapter> directoryChapters = new ArrayList<>();

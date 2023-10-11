@@ -2,7 +2,6 @@ package com.github.toolboxplugin.action;
 
 import com.github.toolboxplugin.executor.CustomExecutor;
 import com.github.toolboxplugin.swing.IReader;
-import com.github.toolboxplugin.utils.ConfigUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -27,10 +26,8 @@ public class IReaderBookSlefAction extends AnAction {
             return;
         }
         CustomExecutor executor = new CustomExecutor(project);
-        IReader storySearch = new IReader(1);
-        // 设置restart和stop
-        executor.withReturn(() -> runExecutor(project)).withRefresh(() -> ConfigUtil.setRunning(project, false), () ->
-                ConfigUtil.getRunning(project));
+        IReader storySearch = new IReader(1,project);
+        executor.withReturn(() -> runExecutor(project)).withRefresh(storySearch.Refresh(), () ->true);
         executor.run(storySearch.getComponent(), storySearch.getToolWindowId());
     }
 }

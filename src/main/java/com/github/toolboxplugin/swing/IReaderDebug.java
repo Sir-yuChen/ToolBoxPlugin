@@ -29,10 +29,12 @@ import us.codecraft.webmagic.scheduler.QueueScheduler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IReaderDebug extends JDialog implements BaseUIAction {
@@ -178,7 +180,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
                 chaptersRuleTitleBoxValue.setSelectedItem("自定义");
                 NotificationUtils.setNotification("ToolboxPlugin IReader", "规则选择失败,请重试",
                         NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
-            }else {
+            } else {
                 chaptersTitleRuleValue.setText(ruleByName.getChapterTitleRuleInfo());
             }
         });
@@ -190,7 +192,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
                 chaptersRuleUrlBoxValue.setSelectedItem("自定义");
                 NotificationUtils.setNotification("ToolboxPlugin IReader", "规则选择失败,请重试",
                         NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
-            }else {
+            } else {
                 chaptersUrlRuleValue.setText(ruleByName.getChapterUrlRuleInfo());
             }
         });
@@ -202,7 +204,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
                 bookContentRuleBoxValue.setSelectedItem("自定义");
                 NotificationUtils.setNotification("ToolboxPlugin IReader", "规则选择失败,请重试",
                         NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
-            }else {
+            } else {
                 bookContentRuleValue.setText(ruleByName.getContentRuleInfo());
             }
         });
@@ -246,16 +248,20 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
     private void onOK() {
         IReaderDebugDTO dto = processMain();
         if (dto != null) {
-            IReaderDebugData.getInstance().save(new ArrayList<>(Arrays.asList(dto)));
             // 执行保存逻辑  保存规则到规则栏中
-            IReaderDebugRuleDTO ruleByName = StoryBookRulesData.getInstance().getStoryBookRuleByName(iReaderDebugDTO.getiReaderDebugRuleDTO().getRuleName());
+            IReaderDebugRuleDTO ruleByName = StoryBookRulesData.getInstance().getStoryBookRuleByName(iReaderDebugDTO.getRuleName());
             if (ruleByName == null) {
                 List<IReaderDebugRuleDTO> rules = StoryBookRulesData.getInstance().getStoryBookRules();
-                rules.add(iReaderDebugDTO.getiReaderDebugRuleDTO());
+                rules.add(new IReaderDebugRuleDTO()
+                        .setRuleName(iReaderDebugDTO.getRuleName())
+                        .setChapterTitleRuleInfo(iReaderDebugDTO.getChapterTitleRuleInfo())
+                        .setChapterUrlRuleInfo(iReaderDebugDTO.getChapterUrlRuleInfo())
+                        .setContentRuleInfo(iReaderDebugDTO.getContentRuleInfo())
+                );
                 StoryBookRulesData.getInstance().setStoryBookRules(rules);
             } else {
                 //清除数据
-                IReaderDebugData.getInstance().del(iReaderDebugDTO);
+                IReaderDebugData.getInstance().del(iReaderDebugDTO.getBookFictionId());
                 NotificationUtils.setNotification("ToolboxPlugin IReader", "规则名称已存在,请修改后重试！",
                         NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
                 return;
@@ -268,13 +274,14 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
             story.setFictionType(dto.getBookFictionType());
             story.setLastReadTime(dto.getBookLastReadTime());
             story.setBookSource("debug");
+            story.setChapter(dto.getChapters().get(0));
             //校验图书名不能相同
             List<StoryBookshelfDTO> storys = StoryBookshelfSetting.getInstance().getLocalStoryBookshelf();
             boolean b = storys.stream().filter(s -> s.getBookSource() == "debug" && s.getTitle().equals(story.getTitle())).findAny().isPresent();
             if (b) {
                 //清除数据
-                IReaderDebugData.getInstance().del(iReaderDebugDTO);
-                StoryBookRulesData.getInstance().delStoryBookRule(dto.getiReaderDebugRuleDTO().getRuleName());
+                IReaderDebugData.getInstance().del(iReaderDebugDTO.getBookFictionId());
+                StoryBookRulesData.getInstance().delStoryBookRule(dto.getRuleName());
                 NotificationUtils.setNotification("ToolboxPlugin IReader", "当前图书名已存在,请修改后重试！",
                         NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
             } else {
@@ -293,7 +300,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
         IReaderDebugDTO dto = processMain();
         if (dto != null) {
             //清除数据
-            IReaderDebugData.getInstance().del(dto);
+            IReaderDebugData.getInstance().del(dto.getBookFictionId());
         }
     }
 
@@ -318,7 +325,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
         IReaderDebugData iReaderDebugDataInstance = IReaderDebugData.getInstance();
         try {
             //完善图书目录 同步
-            Spider spider = Spider.create(new BookChapterProcessor(iReaderDebugDTO));
+            Spider spider = Spider.create(new BookChapterProcessor(iReaderDebugDTO, project));
             //TODO-zy Spider 是否正常请求页面问题 待解决
 //            addSpiderListeners(spider);
             //添加初始的URL
@@ -351,6 +358,8 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
                     } else {
                         item.setChapterPrefixUrl(prefixValue);
                     }
+                    //随机生成章节UUID
+                    item.setChapterId(IdUtil.simpleUUID());
                 } catch (MalformedURLException e) {
                     NotificationUtils.setNotification("ToolboxPlugin IReader", "章节详情页地址前缀失败！",
                             NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
@@ -364,7 +373,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
 
         } catch (Exception e) {
             //删除已经保存成功的数据
-            iReaderDebugDataInstance.del(iReaderDebugDTO);
+            iReaderDebugDataInstance.del(iReaderDebugDTO.getBookFictionId());
             NotificationUtils.setNotification("ToolboxPlugin IReader", "调试失败,请重试！",
                     NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
         }
@@ -378,9 +387,9 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
     private void processBookContent(DirectoryChapter chapter) {
         try {
             String url = chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl());
-            Spider.create(new BookContentProcessor(iReaderDebugDTO))
+            Spider.create(new BookContentProcessor(iReaderDebugDTO, project))
                     .addUrl(url)
-                    .addPipeline(new BookContentPipeline(iReaderDebugDTO, chapter, contentValuePane))
+                    .addPipeline(new BookContentPipeline(iReaderDebugDTO, chapter, contentValuePane,project))
                     .run();
         } catch (Exception ex) {
             contentValuePane.setText("章节内容加载失败,请重试。。。\n" + chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl()));
@@ -424,19 +433,17 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
             return null;
         }
         //校验字符串是否为正则表达式
-        iReaderDebugDTO.setiReaderDebugRuleDTO(new IReaderDebugRuleDTO()
-                .setRuleName(ruleNameValue.getText())
-                .setChapterTitleRuleInfo(chaptersTitleRuleValue.getText())
-                .setChapterUrlRuleInfo(chaptersUrlRuleValue.getText())
-                .setContentRuleInfo(bookContentRuleValue.getText())
-        )
+        iReaderDebugDTO
                 .setBookAuthor(bookAuthorValue.getText())
                 .setBookFictionId(IdUtil.simpleUUID())
                 .setBookFictionType(bookTypeValue.getText())
                 .setBookLastReadTime(DateUtil.format(DateUtil.date(), "yyyy-MM-dd"))
                 .setBookTitle(bookNameValue.getText())
                 .setBookChapterInfoUrl(chaptersUrlValue.getText())
-                .setProject(project);
+                .setRuleName(ruleNameValue.getText())
+                .setChapterTitleRuleInfo(chaptersTitleRuleValue.getText())
+                .setChapterUrlRuleInfo(chaptersUrlRuleValue.getText())
+                .setContentRuleInfo(bookContentRuleValue.getText());
         return iReaderDebugDTO;
     }
 
@@ -459,9 +466,6 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
         chaptersRuleTitleBoxValue.removeAllItems();
         chaptersRuleUrlBoxValue.removeAllItems();
         bookContentRuleBoxValue.removeAllItems();
-        chaptersRuleTitleBoxValue.addItem("自定义");
-        chaptersRuleUrlBoxValue.addItem("自定义");
-        bookContentRuleBoxValue.addItem("自定义");
         NotificationUtils.setNotification("ToolboxPlugin IReader", "页面数据清除成功！",
                 NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 1500);
     }

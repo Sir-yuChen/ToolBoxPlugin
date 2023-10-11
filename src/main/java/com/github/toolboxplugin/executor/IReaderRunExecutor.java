@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class StorySearchRunExecutor extends Executor {
+public class IReaderRunExecutor extends Executor {
 
     @Override
     public String getToolWindowId() {

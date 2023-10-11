@@ -8,6 +8,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jsoup.internal.StringUtil;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class IReaderDebugData implements PersistentStateComponent<IReaderDebugDa
 
 
     static class IReaderDebugState {
-        //属性必须被public修饰
         public List<IReaderDebugDTO> datas = new ArrayList<>();
 
         public List<IReaderDebugDTO> getDataList() {
@@ -37,9 +37,9 @@ public class IReaderDebugData implements PersistentStateComponent<IReaderDebugDa
             }
         }
 
-        public Boolean delData(IReaderDebugDTO param) {
+        public Boolean delData(String param) {
             try {
-                List<IReaderDebugDTO> collect = datas.stream().filter(dto -> !param.getBookFictionId().equals(dto.getBookFictionId())).collect(Collectors.toList());
+                List<IReaderDebugDTO> collect = datas.stream().filter(dto -> !param.equals(dto.getBookFictionId())).collect(Collectors.toList());
                 this.datas = collect;
                 return true;
             } catch (Exception e) {
@@ -73,11 +73,11 @@ public class IReaderDebugData implements PersistentStateComponent<IReaderDebugDa
         state.saveData(storys);
     }
 
-    public Boolean del(IReaderDebugDTO param) {
-        if (param == null) {
+    public Boolean del(String bookId) {
+        if (StringUtil.isBlank(bookId)) {
             return false;
         }
-        Boolean aBoolean = state.delData(param);
+        Boolean aBoolean = state.delData(bookId);
         return aBoolean;
     }
 
