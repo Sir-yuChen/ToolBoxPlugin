@@ -42,7 +42,6 @@ public class IReaderButton extends AbstractCellEditor implements TableCellEditor
 
     @Override
     public Object getCellEditorValue() {
-        // TODO Auto-generated method stub
         return null;
     }
 

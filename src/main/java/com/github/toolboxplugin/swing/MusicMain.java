@@ -138,7 +138,6 @@ public class MusicMain implements BaseUIAction {
         hotSongJp.setBorder(border);
         MusicCommonService musicCommonService = new MusicCommonService();
         NewSongListDto newSong = musicCommonService.getNewSong("50");
-        //TODO-zy 展示推荐的新单曲
         homebelowPanel.add(hotSongJp);
     }
 

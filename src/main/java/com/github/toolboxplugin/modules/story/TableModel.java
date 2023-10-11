@@ -21,25 +21,21 @@ public class TableModel extends AbstractTableModel {
     }
     @Override
     public String getColumnName(int arg0) {
-        // TODO Auto-generated method stub
         return title.get(arg0);
     }
 
     @Override
     public int getColumnCount() {
-        // TODO Auto-generated method stub
         return title.size();
     }
 
     @Override
     public int getRowCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getValueAt(int r, int c) {
-        // TODO Auto-generated method stub
         Object o = data.get(r).get(c);
         return o;
     }

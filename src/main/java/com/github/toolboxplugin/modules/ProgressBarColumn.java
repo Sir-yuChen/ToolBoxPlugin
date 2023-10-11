@@ -33,21 +33,18 @@ public class ProgressBarColumn extends AbstractCellEditor implements TableCellEd
     @Override
     public Component getTableCellRendererComponent(JTable arg0, Object value,
                                                    boolean arg2, boolean arg3, int arg4, int arg5) {
-        // TODO Auto-generated method stub
         rjsb.setValue(Integer.parseInt(value.toString()));
         return rjsb;
     }
 
     @Override
     public Object getCellEditorValue() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
                                                  boolean isSelected, int row, int column) {
-        // TODO Auto-generated method stub
         this.row = row;
         ejsb.setValue(ejsb.getValue() + 5);
         return ejsb;
