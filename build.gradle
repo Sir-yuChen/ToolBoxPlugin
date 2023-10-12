@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.github.toolBoxPlugin'
-//version '1.0' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
+version '1.0.0' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
 
 //指定编码环境
 //sourceCompatibility = 1.8
@@ -56,12 +56,15 @@ intellij {
 patchPluginXml {
     changeNotes = """
       1.0版本.
-      第1.0版本：初始化这个工具箱插件项目.<br>
+      第1.0.0版本：IReader 阅读.<br>
       """
     /**
      * NOTE
      * @author: zy* @date: 2023/9/13 18:10
-     * @description: 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA,这里配置sinceBuild=191，表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
+     * @description: 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA,这里配置sinceBuild=191，
+     * 表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
+     * 注意这个版本号不能高于上面intellij的version,否则runIde会报错
      */
-//    sinceBuild ="201"
+    sinceBuild ="201"
+    untilBuild = '232.*'
 }

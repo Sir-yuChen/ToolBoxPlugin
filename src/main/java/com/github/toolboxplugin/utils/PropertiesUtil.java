@@ -30,7 +30,7 @@ public class PropertiesUtil {
      * idea插件路径
      */
     public static String getPropertiesPath() {
-        PluginId pluginId = PluginId.getId("com.github.toolboxplugin");
+        PluginId pluginId = PluginId.getId("com.github.toolbox");
         IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
         File path = plugin.getPath();
         String pluginPath = path.getAbsolutePath();

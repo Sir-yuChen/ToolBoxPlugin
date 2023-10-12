@@ -187,8 +187,6 @@ public class IReader implements BaseUIAction {
                 } else {
                     getStoryDirContent(value);
                 }
-                //如果为已经被收藏的图书，则需要更新当前图书的阅读章节
-                checkAndUpdateBookCollected();
             });
             //书架表格监听
             bookshelfTable.getSelectionModel().addListSelectionListener(e -> {

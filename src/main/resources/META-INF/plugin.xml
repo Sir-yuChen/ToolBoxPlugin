@@ -4,19 +4,19 @@ https://juejin.cn/post/7132360828409348104
 <idea-plugin url="https://example.com/my-plugin-site">
     <!-- 插件唯一id，不能和其他插件项目重复，所以推荐使用com.xxx.xxx的格式
             插件不同版本之间不能更改，若没有指定，则与插件名称相同 -->
-    <id>com.github.toolboxplugin</id>
+    <id>com.github.toolbox</id>
     <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
-    <name>ToolBoxPlugin</name>
-    <!-- 插件版本号  plugin.xml和build.gradle 二选一-->
-    <version>1.0</version>
+    <name>ToolBox</name>
+    <!-- 插件版本号-->
+    <version>1.0.0</version>
 
     <!-- 供应商主页和email（不能使用默认值，必须修改成自己的）-->
     <vendor email="2470838639@qq.com" url="https://github.com/Sir-yuChen">Sir-yuChen</vendor>
 
     <!-- 插件的描述 （不能使用默认值，必须修改成自己的。并且需要大于40个字符）-->
     <description><![CDATA[
-           ToolBoxPlugin这是一款工具箱插件,里面包含各种开发工具,全部有java语言编写,包括搜索、展示、阅读等功能. <br>
-      <em> ToolBoxPlugin 工具箱 </em>
+           ToolBox This is a toolbox plug-in, which contains a variety of development tools, all written in java language, including book reading and other functions.. <br>
+      <em> ToolBox </em>
     ]]></description>
     <!-- 插件版本变更信息，支持HTML标签；
          将展示在 settings | Plugins 对话框和插件仓库的Web页面 -->
@@ -25,7 +25,7 @@ https://juejin.cn/post/7132360828409348104
         a. 搜索BOOK<br>
         b. 阅读BOOK<br>
         c. 书架管理<br>
-      <p>ToolBoxPlugin 工具箱功能迭代中...</p>
+      <p>ToolBox 工具箱功能迭代中...</p>
     ]]>
     </change-notes>
     <!-- 插件所依赖的其他插件的id -->
