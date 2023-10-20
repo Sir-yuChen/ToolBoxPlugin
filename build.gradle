@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.intellij' version '1.12.0' //引入intellij的gradle插件
 }
 
-group 'com.github.toolBoxPlugin'
-version '1.0.0' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
+group 'com.github.toolbox'
+version '1.0.1' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
 
 //指定编码环境
 //sourceCompatibility = 1.8
@@ -54,10 +54,10 @@ intellij {
 }
 
 patchPluginXml {
-    changeNotes = """
+   /* changeNotes = """
       1.0版本.
       第1.0.0版本：IReader 阅读.<br>
-      """
+      """*/
     /**
      * NOTE
      * @author: zy* @date: 2023/9/13 18:10

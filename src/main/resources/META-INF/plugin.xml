@@ -8,24 +8,29 @@ https://juejin.cn/post/7132360828409348104
     <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
     <name>ToolBox</name>
     <!-- 插件版本号-->
-    <version>1.0.0</version>
+    <version>1.0.1</version>
+<!--    当前插件的起止 IDE 版本支持-->
+<!--    <idea-version since-build="201" until-build="232.*"/>-->
 
     <!-- 供应商主页和email（不能使用默认值，必须修改成自己的）-->
     <vendor email="2470838639@qq.com" url="https://github.com/Sir-yuChen">Sir-yuChen</vendor>
 
     <!-- 插件的描述 （不能使用默认值，必须修改成自己的。并且需要大于40个字符）-->
     <description><![CDATA[
-           ToolBox This is a toolbox plug-in, which contains a variety of development tools, all written in java language, including book reading and other functions.. <br>
-      <em> ToolBox </em>
+               ToolBox This is a toolbox plug-in, which contains a variety of development tools, all written in java language, including book reading and other functions.. <br>
+               Plug-in usage: After successful installation of this plug-in, a new ToolBoxPlugin menu item will be added to the top menu bar of idea. Click to use all the functions contained in the toolbox. <br>
+               More help can be found in the ToolBoxPlugin-Help menu item.  <br>
+               <em> More bug suggestions: https://github.com/Sir-yuChen/ToolBoxPlugin </em> <br>
     ]]></description>
     <!-- 插件版本变更信息，支持HTML标签；
          将展示在 settings | Plugins 对话框和插件仓库的Web页面 -->
     <change-notes><![CDATA[
-      1. 图书阅读<br>
-        a. 搜索BOOK<br>
-        b. 阅读BOOK<br>
-        c. 书架管理<br>
-      <p>ToolBox 工具箱功能迭代中...</p>
+      1. Book Reading <br>
+        a. Search Book <br>
+        b. Read BOOK <br>
+        c. Bookshelf management <br>
+        d. Custom debug mode <br>
+      <p>ToolBox Continuous iteration</p>
     ]]>
     </change-notes>
     <!-- 插件所依赖的其他插件的id -->
@@ -82,6 +87,8 @@ https://juejin.cn/post/7132360828409348104
                 <action id="iReader_debug_rules" class="com.github.toolboxplugin.action.IReaderRulesAction"
                         text="调试规则"/>
             </group>
+            <action id="plugin_help" class="com.github.toolboxplugin.action.PluginHelpAction"
+                    text="帮助文档"/>
         </group>
         <!--
             <group> 元素会定义一个 action group（多个action），设置 action group 的 id、文本、描述

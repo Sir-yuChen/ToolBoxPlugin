@@ -1,7 +1,6 @@
 package com.github.toolboxplugin.executor;
 
 import com.intellij.execution.DefaultExecutionResult;
-import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.configurations.RunProfile;
@@ -11,6 +10,7 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
@@ -105,7 +105,6 @@ public class CustomExecutor implements Disposable {
             }
         }, new DefaultExecutionResult(), layoutUi);
         descriptor.setExecutionId(System.nanoTime());
-//        StringConst.SEO_CONTENT_ID
         final Content content = layoutUi.createContent(uuid, jComponent, jComponent.getName(), AllIcons.Debugger.Console, consolePanel);
         content.setCloseable(true);
         layoutUi.getOptions().setLeftToolbar(createActionToolbar(consolePanel, consoleView, layoutUi, descriptor, executor), "RunnerToolbar");
@@ -115,8 +114,7 @@ public class CustomExecutor implements Disposable {
         Disposer.register(descriptor, this);
 
         Disposer.register(content, consoleView);
-
-        ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
+        RunContentManager.getInstance(project).showRunContent(executor, descriptor);
     }
 
     private ActionGroup createActionToolbar(JPanel consolePanel, ConsoleView consoleView, RunnerLayoutUi layoutUi, RunContentDescriptor descriptor, Executor executor) {

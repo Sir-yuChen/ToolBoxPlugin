@@ -1,7 +1,7 @@
 package com.github.toolboxplugin.utils;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public class PropertiesUtil {
      */
     public static String getPropertiesPath() {
         PluginId pluginId = PluginId.getId("com.github.toolbox");
-        IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
+        IdeaPluginDescriptor plugin = PluginManagerCore.getPlugin(pluginId);
         File path = plugin.getPath();
         String pluginPath = path.getAbsolutePath();
         return pluginPath;
