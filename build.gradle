@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '1.16.0' //引入intellij的gradle插件 注意版本对应
 }
 group 'com.github.toolbox'
-version '1.0.0'
+version '1.0.0.201_202'
 
 //指定编码环境 指定编译环境 intellij 2020版本之后 需要使用jdk 11
 //sourceCompatibility = 11
@@ -72,6 +72,6 @@ patchPluginXml {
      *
      */
     sinceBuild = "201"
-    untilBuild = ''
+    untilBuild = '202.*'
 }
 buildSearchableOptions.enabled = false
