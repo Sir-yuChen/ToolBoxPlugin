@@ -2,8 +2,8 @@ package com.github.toolboxplugin.service.webMagic.pipeline;
 
 import com.github.toolboxplugin.infrastructure.iReader.IReaderDebugData;
 import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;

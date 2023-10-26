@@ -9,11 +9,11 @@ import com.intellij.ui.content.ContentFactory;
 import com.sun.istack.NotNull;
 
 //使用工厂方式创建ToolWindow
-public class MusicToolWindowFactory implements ToolWindowFactory, Condition<Project> {
+public class CommonToolWindowFactory implements ToolWindowFactory, Condition<Project> {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         // 窗体
-        MusicViewBars viewPanel = new MusicViewBars(project);
+        ToolViewBars viewPanel = new ToolViewBars(project);
         // 获取内容工厂的实例
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         // 获取 ToolWindow 显示的内容

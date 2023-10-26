@@ -239,13 +239,13 @@ public class IReader implements BaseUIAction {
 
         //初始化：搜索类型
         comboBoxValues = new ArrayList<>();
-        comboBoxValues.add(new HashMap<>() {{
+        comboBoxValues.add(new HashMap<String, Object>() {{
             put("title", "标题");
         }});
-        comboBoxValues.add(new HashMap<>() {{
+        comboBoxValues.add(new HashMap<String, Object>() {{
             put("author", "作者");
         }});
-        comboBoxValues.add(new HashMap<>() {{
+        comboBoxValues.add(new HashMap<String, Object>() {{
             put("fictionType", "分类");
         }});
         ComboBoxModels comboBoxModels = new ComboBoxModels(comboBoxValues, null);

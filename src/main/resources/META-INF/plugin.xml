@@ -8,7 +8,7 @@ https://juejin.cn/post/7132360828409348104
     <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
     <name>ToolBox</name>
     <!-- 插件版本号-->
-    <version>1.0.1</version>
+<!--    <version>1.0.1</version>-->
 <!--    当前插件的起止 IDE 版本支持-->
 <!--    <idea-version since-build="201" until-build="232.*"/>-->
 
@@ -25,17 +25,13 @@ https://juejin.cn/post/7132360828409348104
     <!-- 插件版本变更信息，支持HTML标签；
          将展示在 settings | Plugins 对话框和插件仓库的Web页面 -->
     <change-notes><![CDATA[
-      1. Book Reading <br>
-        a. Search Book <br>
-        b. Read BOOK <br>
-        c. Bookshelf management <br>
-        d. Custom debug mode <br>
+    <h3>1.0.x</h3>
+        <strong>Book Reading</strong>:Search Book、Read BOOK、Bookshelf management、Custom debug mode<br>
       <p>ToolBox Continuous iteration</p>
     ]]>
     </change-notes>
     <!-- 插件所依赖的其他插件的id -->
     <depends>com.intellij.modules.platform</depends>
-
     <!-- 声明该插件对IDEA core或其他插件的扩展 -->
     <extensions defaultExtensionNs="com.intellij">
         <!--
@@ -48,8 +44,7 @@ https://juejin.cn/post/7132360828409348104
             音乐模块暂时无法实现
              <toolWindow id="Toolboxplugin"
                           anchor="right"
-                          factoryClass="com.github.toolboxplugin.factory.MusicToolWindowFactory"
-                          secondary="true"
+                          factoryClass="com.github.toolboxplugin.factory.CommonToolWindowFactoryactory                       secondary="true"
                           icon="/images/icons/music.svg"
               />
           -->

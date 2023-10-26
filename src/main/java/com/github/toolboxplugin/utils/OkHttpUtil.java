@@ -2,8 +2,8 @@ package com.github.toolboxplugin.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -190,7 +190,7 @@ public class OkHttpUtil {
      * @return
      */
     public OkHttpUtil post(boolean isJsonPost) {
-        RequestBody requestBody;
+        okhttp3.RequestBody requestBody;
         if (isJsonPost) {
             String json = "";
             if (paramMap != null) {

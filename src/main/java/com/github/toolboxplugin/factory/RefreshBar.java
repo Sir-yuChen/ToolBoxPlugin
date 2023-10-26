@@ -1,6 +1,5 @@
 package com.github.toolboxplugin.factory;
 
-import com.github.toolboxplugin.swing.MusicMain;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -11,17 +10,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RefreshBar extends DumbAwareAction {
 
-    private MusicViewBars panel;
+    private ToolViewBars panel;
 
-    public RefreshBar(MusicViewBars panel) {
+    public RefreshBar(ToolViewBars panel) {
         super("刷新页面", "Click to refresh", AllIcons.Actions.Refresh);
         this.panel = panel;
     }
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        MusicMain musicMainUI = panel.getMusicMainUI();
-        musicMainUI.refresh();
+        //TODO-zy  ToolViewBars 获取添加的组件调用刷新方法
     }
 
 }

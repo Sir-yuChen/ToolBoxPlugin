@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class SettingBar extends DumbAwareAction {
 
-    private MusicViewBars panel;
+    private ToolViewBars panel;
 
-    public SettingBar(MusicViewBars panel) {
+    public SettingBar(ToolViewBars panel) {
         super("设置", "Click to setting", AllIcons.Actions.SetDefault);
         this.panel = panel;
     }

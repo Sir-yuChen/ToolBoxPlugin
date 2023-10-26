@@ -21,7 +21,6 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.SpiderListener;
 import us.codecraft.webmagic.scheduler.BloomFilterDuplicateRemover;
@@ -34,6 +33,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -347,9 +347,9 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
             StoryDirJListRender dirJListRender = new StoryDirJListRender();
             IReaderDebugDTO finalIReaderDebugDTO = iReaderDebugDTO;
             iReaderDebugDTO.getChapters().stream().forEach(item -> {
-                java.net.URL aURL;
+                URL aURL;
                 try {
-                    aURL = new java.net.URL(finalIReaderDebugDTO.getBookChapterInfoUrl());
+                    aURL = new URL(finalIReaderDebugDTO.getBookChapterInfoUrl());
                     String prefixValue = chaptersUrlPrefixValue.getText();
                     if (StringUtils.isEmpty(prefixValue) || ("https://".concat(aURL.getHost())).equals(prefixValue)) {
                         //页面未填写章节目录，默认为当前页面的域名
@@ -389,7 +389,7 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
             String url = chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl());
             Spider.create(new BookContentProcessor(iReaderDebugDTO, project))
                     .addUrl(url)
-                    .addPipeline(new BookContentPipeline(iReaderDebugDTO, chapter, contentValuePane,project))
+                    .addPipeline(new BookContentPipeline(iReaderDebugDTO, chapter, contentValuePane, project))
                     .run();
         } catch (Exception ex) {
             contentValuePane.setText("章节内容加载失败,请重试。。。\n" + chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl()));
@@ -476,20 +476,8 @@ public class IReaderDebug extends JDialog implements BaseUIAction {
      */
     private void addSpiderListeners(Spider spider) {
         ArrayList<SpiderListener> spiderListeners = new ArrayList<>();
-        spiderListeners.add(new SpiderListener() {
-            @Override
-            public void onSuccess(Request request) {
-                System.out.println("成功request = " + request);
-            }
-
-            @Override
-            public void onError(Request request) {
-                //Request.CYCLE_TRIED_TIMES设置失败重试次数
-                spider.addRequest(request);
-            }
-        });
+        spiderListeners.add(request ->
+                System.out.println("成功request = " + request));
         spider.setSpiderListeners(spiderListeners);
     }
-
-
 }

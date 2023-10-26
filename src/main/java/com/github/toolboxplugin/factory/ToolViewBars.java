@@ -1,6 +1,5 @@
 package com.github.toolboxplugin.factory;
 
-import com.github.toolboxplugin.swing.MusicMain;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
@@ -12,15 +11,14 @@ import com.intellij.ui.JBSplitter;
 /**
  *
  **/
-public class MusicViewBars extends SimpleToolWindowPanel {
+public class ToolViewBars extends SimpleToolWindowPanel {
     private Project project;
-    private MusicMain musicMain;
 
-    public MusicViewBars(Project project) {
+    public ToolViewBars(Project project) {
         super(true, true); //控制按钮位置
         this.project = project;
-        musicMain = new MusicMain();
-        add(musicMain.getComponent());
+        //TODO-zy 添加展示组件
+//        add();
         // 设置窗体侧边栏按钮
         DefaultActionGroup group = new DefaultActionGroup();
         group.add(new RefreshBar(this));
@@ -32,7 +30,8 @@ public class MusicViewBars extends SimpleToolWindowPanel {
         // 添加
         JBSplitter splitter = new JBSplitter(true);
         splitter.setSplitterProportionKey("main.splitter.key");
-        splitter.setFirstComponent(musicMain.getComponent());
+        //TODO-zy 添加展示组件
+//        splitter.setFirstComponent();
         splitter.setProportion(0.3f);
         setContent(splitter);
 
@@ -41,9 +40,4 @@ public class MusicViewBars extends SimpleToolWindowPanel {
     public Project getProject() {
         return project;
     }
-
-    public MusicMain getMusicMainUI() {
-        return musicMain;
-    }
-
 }

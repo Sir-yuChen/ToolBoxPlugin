@@ -2,7 +2,7 @@ package com.github.toolboxplugin.model.DTO;
 
 import java.util.List;
 
-public class IReaderDebugDTO {
+public class IReaderDebugDTO extends Throwable {
     public String bookFictionId;
     public String bookChapterInfoUrl;
     public String bookTitle;

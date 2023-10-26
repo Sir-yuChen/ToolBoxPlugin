@@ -1,15 +1,13 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.12.0' //引入intellij的gradle插件
+    id 'org.jetbrains.intellij' version '1.16.0' //引入intellij的gradle插件 注意版本对应
 }
-
 group 'com.github.toolbox'
-version '1.0.1' //定义jar包/zip包的版本号  plugin.xml和build.gradle 二选一
+version '1.0.0'
 
-//指定编码环境
-//sourceCompatibility = 1.8
-////指定编译环境
-//targetCompatibility = 1.8
+//指定编码环境 指定编译环境 intellij 2020版本之后 需要使用jdk 11
+//sourceCompatibility = 11
+//targetCompatibility = 11
 //设置编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -22,22 +20,21 @@ task createJavadoc(type: Javadoc) {
 repositories {
     mavenLocal()//添加Maven本地资源库
     maven { url 'https://maven.aliyun.com/repository/google' }
-    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/public' }
     mavenCentral()//远程仓库
 }
 
 dependencies {
-    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     implementation group: 'us.codecraft', name: 'webmagic-core', version: '0.9.1'
     implementation group: 'us.codecraft', name: 'webmagic-extension', version: '0.9.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
-    implementation group: 'cn.hutool', name: 'hutool-all', version: '5.8.21'
+    implementation group: 'cn.hutool', name: 'hutool-core', version: '5.8.22'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.alibaba:fastjson:1.2.60'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.22'
 
 
+    implementation fileTree(dir: 'lib', includes: ['*jar'])
 }
-// See https://github.com/JetBrains/gradle-intellij-plugin/
+
 intellij {
     /**
      * NOTE
@@ -49,22 +46,32 @@ intellij {
     /** NOTE
      * @author: zy* @date: 2023/9/13 18:08
      * @description: build.gradle文件：org.jetbrains.intellij与JDK与gradle版本需要一一对应
+     * cmd  “certutil -hashfile 文件名 SHA1”    win验证文件完整性
      */
-    version = '2020.1.2'
+    version = '2020.1'
+    type = "IC"
+    intellij.updateSinceUntilBuild = true
+    intellij.sameSinceUntilBuild = false
 }
 
 patchPluginXml {
-   /* changeNotes = """
-      1.0版本.
-      第1.0.0版本：IReader 阅读.<br>
-      """*/
+    // changeNotes = """"""
     /**
-     * NOTE
+     * NOTE 版本兼容性问题
      * @author: zy* @date: 2023/9/13 18:10
      * @description: 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA,这里配置sinceBuild=191，
      * 表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
      * 注意这个版本号不能高于上面intellij的version,否则runIde会报错
+     *
+     * 1. 首先从idea版本查到对应的gradle版本
+     * 2. 通过grale版本号，然后确定jdk版本
+     * 3. 通过gradle版本号确定gradle-intellij-plugin版本号
+     * 参考
+     * https://blog.csdn.net/wl1411956542/article/details/129715175
+     * https://juejin.cn/post/7122385701257084941
+     *
      */
-    sinceBuild ="201"
-    untilBuild = '232.*'
+    sinceBuild = "201"
+    untilBuild = ''
 }
+buildSearchableOptions.enabled = false
