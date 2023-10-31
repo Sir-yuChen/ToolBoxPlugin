@@ -3,10 +3,10 @@ plugins {
     id 'org.jetbrains.intellij' version '1.16.0'
 }
 group 'com.github.toolbox'
-version '1.0.0.203_221'
-//jdk 11 Gradle 6.8
-sourceCompatibility = 11
-targetCompatibility = 11
+version '1.0.0.222_223'
+//jdk 17 Gradle 8.0
+sourceCompatibility = 17
+targetCompatibility = 17
 //设置编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -44,14 +44,14 @@ intellij {
      * @description: build.gradle文件：org.jetbrains.intellij与JDK与gradle版本需要一一对应
      * cmd  “certutil -hashfile 文件名 SHA1”    win验证文件完整性
      */
-    version = '2020.3'
+    version = '2022.2'
     type = "IC"
     intellij.updateSinceUntilBuild = true
     intellij.sameSinceUntilBuild = false
 }
 
 patchPluginXml {
-    sinceBuild = "203"
-    untilBuild = '221.*'
+    sinceBuild = "222"
+    untilBuild = '223.*'
 }
 buildSearchableOptions.enabled = false

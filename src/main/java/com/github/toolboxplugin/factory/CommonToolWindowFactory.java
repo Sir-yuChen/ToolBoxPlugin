@@ -15,9 +15,9 @@ public class CommonToolWindowFactory implements ToolWindowFactory, Condition<Pro
         // 窗体
         ToolViewBars viewPanel = new ToolViewBars(project);
         // 获取内容工厂的实例
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ContentFactory.getInstance();
         // 获取 ToolWindow 显示的内容
-        Content content = contentFactory.createContent(viewPanel, "音乐", false);
+        Content content = contentFactory.createContent(viewPanel, "自定义窗口", false);
         // 设置 ToolWindow 显示的内容
         toolWindow.getContentManager().addContent(content,0);
     }
@@ -25,7 +25,6 @@ public class CommonToolWindowFactory implements ToolWindowFactory, Condition<Pro
     /**
      * 控制tool window是否展示
      *
-     * @param project
      * @return
      */
     @Override

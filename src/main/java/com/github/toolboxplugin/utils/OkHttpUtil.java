@@ -2,8 +2,6 @@ package com.github.toolboxplugin.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -20,7 +18,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtil {
-    private static Logger logger = LogManager.getLogger(OkHttpUtil.class);
 
     private static volatile OkHttpClient okHttpClient = null;
     private static volatile Semaphore semaphore = null;
@@ -171,7 +168,7 @@ public class OkHttpUtil {
                         }
                         break;
                     default:
-                        logger.error("未知符合");
+                        System.out.println("error");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

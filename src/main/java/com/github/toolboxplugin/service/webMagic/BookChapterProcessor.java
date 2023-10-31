@@ -6,8 +6,6 @@ import com.github.toolboxplugin.utils.NotificationUtils;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.util.CollectionUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -21,8 +19,6 @@ import java.util.List;
  * 用于解析爬取到的XXX html页面
  **/
 public class BookChapterProcessor implements PageProcessor {
-
-    private static Logger logger = LogManager.getLogger(BookChapterProcessor.class);
 
     // 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
@@ -40,7 +36,6 @@ public class BookChapterProcessor implements PageProcessor {
     @Override
     // process是定制爬虫逻辑的核心接口，在这里编写抽取逻辑
     public void process(Page page) {
-        logger.info("BookChapterProcessor 开始解析页面 start");
         Html html = page.getHtml();
         List<String> chapterTitleList = html.xpath(iReaderDebugDTO.getChapterTitleRuleInfo()).all();
         List<String> chapterUrlList = html.xpath(iReaderDebugDTO.getChapterUrlRuleInfo()).all();
@@ -61,7 +56,6 @@ public class BookChapterProcessor implements PageProcessor {
         }
         iReaderDebugDTO.setChapters(directoryChapters);
         page.putField("iReaderDebugDTO", iReaderDebugDTO);
-        logger.info("BookChapterProcessor 结束解析页面 end");
     }
 
     @Override

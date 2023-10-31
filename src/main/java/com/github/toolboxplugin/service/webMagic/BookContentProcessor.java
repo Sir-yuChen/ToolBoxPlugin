@@ -5,8 +5,6 @@ import com.github.toolboxplugin.utils.NotificationUtils;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.util.CollectionUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -19,7 +17,6 @@ import java.util.List;
  **/
 public class BookContentProcessor implements PageProcessor {
 
-    private static Logger logger = LogManager.getLogger(BookContentProcessor.class);
     private IReaderDebugDTO iReaderDebugDTO;
     private Site site;
     private Project project;
@@ -32,7 +29,6 @@ public class BookContentProcessor implements PageProcessor {
     @Override
     // process是定制爬虫逻辑的核心接口，在这里编写抽取逻辑
     public void process(Page page) {
-        logger.info("BookContentProcessor 开始解析页面 start");
         List<String> content = page.getHtml().xpath(iReaderDebugDTO.getContentRuleInfo()).all();
         if (CollectionUtils.isEmpty(content)) {
             NotificationUtils.setNotification("注意：未匹配到任何数据",
@@ -40,7 +36,6 @@ public class BookContentProcessor implements PageProcessor {
             return;
         }
         page.putField("bookContent", content);
-        logger.info("BookContentProcessor 结束解析页面 end");
     }
 
     @Override

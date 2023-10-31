@@ -3,8 +3,6 @@ package com.github.toolboxplugin.utils;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.ResourceBundle;
@@ -13,7 +11,6 @@ import java.util.ResourceBundle;
  * @author Administrator
  */
 public class PropertiesUtil {
-    private static Logger logger = LogManager.getLogger(PropertiesUtil.class);
 
     /**
      * 读取 properties 测试项目配置文件
@@ -22,7 +19,6 @@ public class PropertiesUtil {
         //放src目录下的.properties
         ResourceBundle resource = ResourceBundle.getBundle(propertiesPath);
         String v = resource.getString(key);
-//        logger.info("获取配置文件 key={} value={}", key, v);
         return v;
     }
 
