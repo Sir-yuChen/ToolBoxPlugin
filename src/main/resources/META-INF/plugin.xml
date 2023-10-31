@@ -8,9 +8,9 @@ https://juejin.cn/post/7132360828409348104
     <!-- 插件名称，别人在官方插件库搜索你的插件时使用的名称 -->
     <name>ToolBox</name>
     <!-- 插件版本号-->
-<!--    <version>1.0.1</version>-->
-<!--    当前插件的起止 IDE 版本支持-->
-<!--    <idea-version since-build="201" until-build="232.*"/>-->
+    <!--    <version>1.0.1</version>-->
+    <!--    当前插件的起止 IDE 版本支持-->
+    <!--    <idea-version since-build="201" until-build="232.*"/>-->
 
     <!-- 供应商主页和email（不能使用默认值，必须修改成自己的）-->
     <vendor email="2470838639@qq.com" url="https://github.com/Sir-yuChen">Sir-yuChen</vendor>
@@ -41,10 +41,9 @@ https://juejin.cn/post/7132360828409348104
             canCloseContents="true"
          -->
         <!--
-            音乐模块暂时无法实现
              <toolWindow id="Toolboxplugin"
                           anchor="right"
-                          factoryClass="com.github.toolboxplugin.factory.CommonToolWindowFactoryactory                       secondary="true"
+                          factoryClass="com.github.toolboxplugin.factory.CommonToolWindowFactoryactory         secondary="true"
                           icon="/images/icons/music.svg"
               />
           -->
@@ -57,6 +56,11 @@ https://juejin.cn/post/7132360828409348104
                 serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.StoryBookRulesData"/>
         <applicationService
                 serviceImplementation="com.github.toolboxplugin.infrastructure.iReader.IReaderDebugData"/>
+        <!--消息模块配置-->
+        <notificationGroup displayType="BALLOON" id="toolbox.notification.balloon" isLogByDefault="true"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="toolbox.notification.sticky_balloon" isLogByDefault="true"/>
+        <notificationGroup displayType="NONE" id="toolbox.notification.none" isLogByDefault="true"/>
+        <notificationGroup displayType="TOOL_WINDOW" id="toolbox.notification.tool_window" isLogByDefault="true"/>
     </extensions>
     <!-- 编写插件动作 注册Action
             一个 Action 表示 IDEA 菜单里的一个 menu item 或工具栏上的一个按钮，通过继承 AnAction class 实现，

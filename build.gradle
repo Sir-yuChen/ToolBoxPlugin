@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.16.0' //引入intellij的gradle插件 注意版本对应
+    id 'org.jetbrains.intellij' version '1.16.0'
 }
 group 'com.github.toolbox'
-version '1.0.0'
-
-//指定编码环境 指定编译环境 intellij 2020版本之后 需要使用jdk 11
-//sourceCompatibility = 11
-//targetCompatibility = 11
+version '1.0.0.203_221'
+//jdk 11 Gradle 6.8
+sourceCompatibility = 11
+targetCompatibility = 11
 //设置编码
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -25,14 +24,11 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'us.codecraft', name: 'webmagic-core', version: '0.9.1'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.22'
     implementation group: 'us.codecraft', name: 'webmagic-extension', version: '0.9.1'
+    implementation group: 'us.codecraft', name: 'webmagic-core', version: '0.9.1'
     implementation group: 'cn.hutool', name: 'hutool-core', version: '5.8.22'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.22'
-
-
-    implementation fileTree(dir: 'lib', includes: ['*jar'])
 }
 
 intellij {
@@ -48,30 +44,14 @@ intellij {
      * @description: build.gradle文件：org.jetbrains.intellij与JDK与gradle版本需要一一对应
      * cmd  “certutil -hashfile 文件名 SHA1”    win验证文件完整性
      */
-    version = '2020.1'
+    version = '2020.3'
     type = "IC"
     intellij.updateSinceUntilBuild = true
     intellij.sameSinceUntilBuild = false
 }
 
 patchPluginXml {
-    // changeNotes = """"""
-    /**
-     * NOTE 版本兼容性问题
-     * @author: zy* @date: 2023/9/13 18:10
-     * @description: 这个意思是说当前定义的这个插件最早支持到什么版本的IDEA,这里配置sinceBuild=191，
-     * 表示插件只能被版本号大于等于2019.1版本的IDEA安装，低于这个版本的将抛无法兼容的错误
-     * 注意这个版本号不能高于上面intellij的version,否则runIde会报错
-     *
-     * 1. 首先从idea版本查到对应的gradle版本
-     * 2. 通过grale版本号，然后确定jdk版本
-     * 3. 通过gradle版本号确定gradle-intellij-plugin版本号
-     * 参考
-     * https://blog.csdn.net/wl1411956542/article/details/129715175
-     * https://juejin.cn/post/7122385701257084941
-     *
-     */
-    sinceBuild = "201"
-    untilBuild = ''
+    sinceBuild = "203"
+    untilBuild = '221.*'
 }
 buildSearchableOptions.enabled = false

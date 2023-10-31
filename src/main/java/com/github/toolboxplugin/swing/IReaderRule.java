@@ -65,7 +65,7 @@ public class IReaderRule implements BaseUIAction {
         return () -> {
             processingRulesTable();
             IReaderRulePanel.updateUI();
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "刷新成功！",
+            NotificationUtils.setNotification( "刷新成功！",
                     NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 2000);
         };
     }
@@ -74,7 +74,7 @@ public class IReaderRule implements BaseUIAction {
         List<IReaderDebugRuleDTO> rules = StoryBookRulesData.getInstance().getStoryBookRules();
         List<String> titles = new ArrayList<>(Arrays.asList("序号", "规则名称", "章节标题规则", "章节地址规则", "图书内容规则", "操作项"));
         if (CollectionUtils.isEmpty(rules)) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "一条规则都不存在！",
+            NotificationUtils.setNotification( "一条规则都不存在！",
                     NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 2000);
             return;
         }
@@ -107,7 +107,7 @@ public class IReaderRule implements BaseUIAction {
                 if (row >= 0) {
                     String ruleName = rulesTable.getValueAt(row, 1).toString();
                     StoryBookRulesData.getInstance().delStoryBookRule(ruleName);
-                    NotificationUtils.setNotification("ToolboxPlugin IReader", "规则:" + ruleName + " 删除成功",
+                    NotificationUtils.setNotification( "规则:" + ruleName + " 删除成功",
                             NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 3000);
                     processingRulesTable();
                 }

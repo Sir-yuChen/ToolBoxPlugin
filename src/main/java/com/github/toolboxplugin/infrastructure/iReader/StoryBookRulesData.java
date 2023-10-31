@@ -2,8 +2,8 @@ package com.github.toolboxplugin.infrastructure.iReader;
 
 
 import com.github.toolboxplugin.model.DTO.IReaderDebugRuleDTO;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +45,7 @@ public class StoryBookRulesData implements PersistentStateComponent<StoryBookRul
     }
 
     public static StoryBookRulesData getInstance() {
-        return ServiceManager.getService(StoryBookRulesData.class);
+        return ApplicationManager.getApplication().getService(StoryBookRulesData.class);
     }
 
     @Nullable

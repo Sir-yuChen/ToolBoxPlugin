@@ -414,11 +414,11 @@ public class IReader implements BaseUIAction {
             Boolean del = IReaderDebugData.getInstance().del(dto.getFictionId());
             if (del) {
                 StoryBookshelfSetting.getInstance().delLocalStoryBookshelf(dto);
-                NotificationUtils.setNotification("ToolboxPlugin IReader", "图书:" + dto.getTitle() + "删除成功",
-                        NotificationDisplayType.STICKY_BALLOON, NotificationType.INFORMATION, project, 2000);
+                NotificationUtils.setNotification("图书:" + dto.getTitle() + "删除成功",
+                        NotificationDisplayType.BALLOON, NotificationType.INFORMATION, project, 3000);
             } else {
-                NotificationUtils.setNotification("ToolboxPlugin IReader", "图书:" + dto.getTitle() + "删除失败,请刷新重试",
-                        NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
+                NotificationUtils.setNotification("图书:" + dto.getTitle() + "删除失败,请刷新重试",
+                        NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 3000);
             }
         } else {
             //非来着debug调试的图书
@@ -653,8 +653,8 @@ public class IReader implements BaseUIAction {
                 showStoryHomeContent(storyDirectory);
             }
         } catch (Exception e) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "图书目录加载失败,请刷新重试！",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 2000);
+            NotificationUtils.setNotification("图书目录加载失败,请刷新重试！",
+                    NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 3000);
         }
     }
 
@@ -673,8 +673,8 @@ public class IReader implements BaseUIAction {
                         .run();
             } catch (Exception ex) {
                 contentPanel.setText("章节内容加载失败,请重试。。。\n" + chapter.getChapterPrefixUrl().concat(chapter.getChapterUrl()));
-                NotificationUtils.setNotification("ToolboxPlugin IReader", "加载章节内容失败,请重试！",
-                        NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
+                NotificationUtils.setNotification("加载章节内容失败,请重试！",
+                        NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 5000);
             }
         } else {
             StoryService storyService = new StoryService();

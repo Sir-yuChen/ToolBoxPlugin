@@ -31,11 +31,11 @@ public class PluginHelpAction extends AnAction {
                 desktop.browse(uri);
             }
         } catch (IOException ex) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "打开帮助文档失败,请手动浏览器打开:" + site,
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, e.getProject(), 3000);
+            NotificationUtils.setNotification("打开帮助文档失败,请手动浏览器打开:" + site,
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, e.getProject(), -1);
         } catch (URISyntaxException ex) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "打开帮助文档失败,请手动浏览器打开:" + site,
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, e.getProject(), 3000);
+            NotificationUtils.setNotification("打开帮助文档失败,请手动浏览器打开:" + site,
+                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, e.getProject(), -1);
         }
     }
 }

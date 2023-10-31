@@ -45,8 +45,8 @@ public class BookChapterProcessor implements PageProcessor {
         List<String> chapterTitleList = html.xpath(iReaderDebugDTO.getChapterTitleRuleInfo()).all();
         List<String> chapterUrlList = html.xpath(iReaderDebugDTO.getChapterUrlRuleInfo()).all();
         if (CollectionUtils.isEmpty(chapterTitleList) || CollectionUtils.isEmpty(chapterUrlList)) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "注意：未匹配到任何数据",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 0);
+            NotificationUtils.setNotification( "注意：未匹配到任何数据",
+                    NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 5000);
             return;
         }
         List<DirectoryChapter> directoryChapters = new ArrayList<>();

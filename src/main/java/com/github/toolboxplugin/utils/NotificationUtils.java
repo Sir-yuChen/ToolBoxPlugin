@@ -4,40 +4,43 @@ import com.intellij.icons.AllIcons;
 import com.intellij.notification.*;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 
 import javax.swing.*;
 
 /**
  * @author Administrator
- * https://houbb.github.io/2017/10/13/idea-plugin-dev-03-02-popup
  */
 public class NotificationUtils {
-    private static NotificationGroup notificationGroup_STICKY_BALLOON = new NotificationGroup("ToolboxPlugin", NotificationDisplayType.STICKY_BALLOON, true);
-    private static NotificationGroup notificationGroup_BALLOON = new NotificationGroup("ToolboxPlugin", NotificationDisplayType.BALLOON, true);
-    private static NotificationGroup notificationGroup_NONE = new NotificationGroup("ToolboxPlugin", NotificationDisplayType.NONE, true);
-    private static NotificationGroup notificationGroup_TOOL_WINDOW = new NotificationGroup("ToolboxPlugin", NotificationDisplayType.TOOL_WINDOW, true);
+    // 获取通知组管理器
+    private static NotificationGroupManager manager = NotificationGroupManager.getInstance();
+    // 获取注册的通知组
+    private static NotificationGroup notificationGroup_BALLOON = manager.getNotificationGroup("toolbox.notification.balloon");
+    private static NotificationGroup notificationGroup_STICKY_BALLOON = manager.getNotificationGroup("toolbox.notification.sticky_balloon");
+    private static NotificationGroup notificationGroup_NONE = manager.getNotificationGroup("toolbox.notification.none");
+    private static NotificationGroup notificationGroup_TOOL_WINDOW = manager.getNotificationGroup("toolbox.notification.tool_window");
 
-    public static void setNotification(String title, String message, NotificationDisplayType notificationType,
+    public static void setNotification(String message, NotificationDisplayType notificationType,
                                        NotificationType messageType, Project project, int delay) {
         Notification notification = null;
         switch (notificationType) {
             case BALLOON:
                 // 设置消息的图标
-                notification = notificationGroup_BALLOON.createNotification(title, message,
-                        NotificationType.INFORMATION, new NotificationListener.UrlOpeningListener(false));
+                notification = notificationGroup_BALLOON.createNotification(message, NotificationType.INFORMATION);
                 break;
             case NONE:
-                notification = notificationGroup_NONE.createNotification(title, message,
-                        NotificationType.INFORMATION, new NotificationListener.UrlOpeningListener(false));
+                notification = notificationGroup_NONE.createNotification(message, NotificationType.INFORMATION);
                 break;
             case TOOL_WINDOW:
-                notification = notificationGroup_TOOL_WINDOW.createNotification(title, message,
-                        NotificationType.INFORMATION, new NotificationListener.UrlOpeningListener(false));
+                notification = notificationGroup_TOOL_WINDOW.createNotification(message, NotificationType.INFORMATION);
                 break;
             default:
-                //默认
-                notification = notificationGroup_STICKY_BALLOON.createNotification(title, message,
-                        NotificationType.INFORMATION, new NotificationListener.UrlOpeningListener(false));
+                //默认 手动关闭
+                notification = notificationGroup_STICKY_BALLOON.createNotification(message, NotificationType.INFORMATION);
         }
         //设置提示图标
         if (notification != null) {
@@ -46,7 +49,7 @@ public class NotificationUtils {
                 // 设置消息的图标
                 notification.setIcon(icon);
                 Notifications.Bus.notify(notification, project);
-                if (delay > 0) {
+                if (delay > 0 && notificationType.equals(NotificationDisplayType.STICKY_BALLOON)) {
                     //设置延迟关闭时间 毫秒
                     Notification finalNotification = notification;
                     Timer timer = new Timer(delay, e -> {

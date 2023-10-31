@@ -35,8 +35,8 @@ public class BookContentProcessor implements PageProcessor {
         logger.info("BookContentProcessor 开始解析页面 start");
         List<String> content = page.getHtml().xpath(iReaderDebugDTO.getContentRuleInfo()).all();
         if (CollectionUtils.isEmpty(content)) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "注意：未匹配到任何数据",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 0);
+            NotificationUtils.setNotification("注意：未匹配到任何数据",
+                    NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 5000);
             return;
         }
         page.putField("bookContent", content);

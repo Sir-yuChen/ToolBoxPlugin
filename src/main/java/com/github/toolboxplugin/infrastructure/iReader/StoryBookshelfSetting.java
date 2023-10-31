@@ -2,8 +2,8 @@ package com.github.toolboxplugin.infrastructure.iReader;
 
 
 import com.github.toolboxplugin.model.DTO.StoryBookshelfDTO;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class StoryBookshelfSetting implements PersistentStateComponent<StoryBook
     }
 
     public static StoryBookshelfSetting getInstance() {
-        return ServiceManager.getService(StoryBookshelfSetting.class);
+        return ApplicationManager.getApplication().getService(StoryBookshelfSetting.class);
     }
 
     @Nullable

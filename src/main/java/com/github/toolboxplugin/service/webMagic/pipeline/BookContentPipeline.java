@@ -80,11 +80,11 @@ public class BookContentPipeline implements Pipeline {
             htmledit.insertHTML(text_html, contentPane.getCaretPosition(),
                     html, 0, 0, HTML.Tag.HTML);
         } catch (BadLocationException e) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "章节内容加载失败请重试！",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
+            NotificationUtils.setNotification("章节内容加载失败请重试！",
+                    NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 3000);
         } catch (IOException e) {
-            NotificationUtils.setNotification("ToolboxPlugin IReader", "章节内容加载失败请重试！",
-                    NotificationDisplayType.STICKY_BALLOON, NotificationType.ERROR, project, 3000);
+            NotificationUtils.setNotification("章节内容加载失败请重试！",
+                    NotificationDisplayType.BALLOON, NotificationType.ERROR, project, 3000);
         }
     }
 }

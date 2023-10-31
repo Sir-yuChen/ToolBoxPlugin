@@ -2,7 +2,10 @@ package com.github.toolboxplugin.infrastructure.iReader;
 
 
 import com.github.toolboxplugin.model.DTO.IReaderDebugDTO;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.internal.StringUtil;
@@ -46,7 +49,7 @@ public class IReaderDebugData implements PersistentStateComponent<IReaderDebugDa
     }
 
     public static IReaderDebugData getInstance() {
-        return ServiceManager.getService(IReaderDebugData.class);
+        return ApplicationManager.getApplication().getService(IReaderDebugData.class);
     }
 
     @Nullable
